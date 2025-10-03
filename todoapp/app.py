@@ -38,13 +38,28 @@ def index():
 @app.route("/register", methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
-        pass   #registration logic here
+        name = request.form['name']
+        email = request.form['email']
+        password = request.form['password']
+        new_user = User(name=name, email=email, password=password)
+        db.session.add(new_user)
+        db.session.commit()
+        return redirect('/login')
     return render_template('register.html')
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        pass        #login logic here
+        email = request.form['email']
+        password = request.form['password']
+
+        user = User.query.filter_by(email=email).first()
+        if user and user.check_password(password):
+            session['email'] = user.email
+            return redirect('/dashboard')
+        else:
+            return render_template('login.html', error='Invalid user credentials')
 
     return render_template('login.html')
+
 
