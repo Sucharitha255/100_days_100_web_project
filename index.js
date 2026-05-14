@@ -306,7 +306,11 @@ function fillTable() {
         ["Day 112", "Nykaa Clone Website", "./public/Nykaa-clone/index.html"],
         ["Day 113", "CPU Scheduler", "./public/CpuScheduler/index.html"],
      ["Day 114","EchoNotes","./public/EchoNotes/index.html"],
+<<<<<<< HEAD
      ["Day 115", "ZEN TIMER", "./public/ZEN_TIMER/index.html"]
+=======
+     ["Day 115", "ZEN TIMER", "./public/ZEN_TIMER/index.html"],
+>>>>>>> 0b0f5f1b7b3ff3e1f089b21d9828df700316937b
     ];
 
     const tbody = document.getElementById('tableBody');
