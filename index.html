@@ -3,22 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="A curated collection of 112 frontend experiments — UI engineering, animations, redesigns, and creative coding built with HTML, CSS, and JavaScript.">
+    <meta name="description" content="A curated archive of frontend experiments — UI systems, motion studies, creative coding, and interactive concepts built with HTML, CSS, and JavaScript.">
     <title>100 Days · 100 Web Projects</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&family=Orbitron:wght@500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div class="ambient ambient-left" aria-hidden="true"></div>
+    <div class="ambient ambient-right" aria-hidden="true"></div>
+    <div class="noise-layer" aria-hidden="true"></div>
 
     <!-- ── NAVBAR ──────────────────────────────────────────── -->
     <nav class="navbar" id="navbar">
         <div class="navbar-brand">
-            <img src="https://i.pinimg.com/736x/1c/54/f7/1c54f7b06d7723c21afc5035bf88a5ef.jpg" alt="100 Days Logo">
-            <span>100 Days</span>
+            <span class="brand-mark" aria-hidden="true">100</span>
+            <span class="brand-copy">
+                <span class="brand-kicker">Open Source Archive</span>
+                <strong>100 Days · 100 Web Projects</strong>
+            </span>
         </div>
         <div class="nav-buttons" id="navButtons">
             <!-- populated by JS -->
@@ -28,11 +34,11 @@
     <!-- ── HERO ───────────────────────────────────────────── -->
     <section class="hero" id="hero">
         <div class="hero-inner">
-            <p class="hero-overline">Frontend Experiments · 2026</p>
+            <p class="hero-overline">Open Source Frontend Archive · 2026</p>
 
             <h1 class="hero-headline">
-                112 projects built to explore<br>
-                interaction, motion &amp; UI systems.
+                <span class="hero-line">100 DAYS</span>
+                <span class="hero-line hero-line-accent">100 WEB PROJECTS</span>
             </h1>
 
             <p class="hero-sub">
@@ -49,6 +55,10 @@
             </div>
 
             <div class="stats-strip" id="statsStrip">
+                <span class="stat-item">
+                    <strong id="projectCount">—</strong> Projects
+                </span>
+                <span class="stat-divider">·</span>
                 <span class="stat-item">
                     <strong id="starCount">—</strong> Stars
                 </span>
@@ -75,6 +85,10 @@
     <!-- ── PROJECTS ───────────────────────────────────────── -->
     <section class="projects-section" id="projects">
         <div class="projects-inner">
+            <div class="projects-intro">
+                <p class="section-label">Archive index</p>
+                <h2 class="section-title">Every experiment, catalogued.</h2>
+            </div>
 
             <div class="projects-header">
                 <div class="search-bar">
@@ -88,7 +102,7 @@
                     >
                 </div>
                 <div class="filter-chips" id="filterChips">
-                    <button class="chip active" data-filter="all" id="filterAll">All <span class="chip-count">112</span></button>
+                    <button class="chip active" data-filter="all" id="filterAll">All <span class="chip-count" id="allCount">112</span></button>
                     <button class="chip" data-filter="game" id="filterGame">Games</button>
                     <button class="chip" data-filter="clone" id="filterClone">Clones</button>
                     <button class="chip" data-filter="tool" id="filterTool">Tools</button>

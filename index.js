@@ -243,6 +243,23 @@ function initSearch() {
     });
 }
 
+function syncProjectCounts() {
+    const total = PROJECTS.length.toLocaleString();
+    const countNodes = [
+        document.getElementById('projectCount'),
+        document.getElementById('allCount'),
+    ];
+
+    countNodes.forEach(node => {
+        if (node) node.textContent = total;
+    });
+
+    const searchInput = document.getElementById('searchInput');
+    if (searchInput) {
+        searchInput.placeholder = `Search ${total} projects…`;
+    }
+}
+
 /* ============================================================
    NAVBAR — dynamic based on login state
    ============================================================ */
@@ -326,6 +343,7 @@ document.addEventListener('DOMContentLoaded', () => {
     updateNavbar();
     initFilterChips();
     initSearch();
+    syncProjectCounts();
     renderGrid();
     fetchRepoStats();
     initScrollBtn();
