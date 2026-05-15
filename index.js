@@ -111,19 +111,44 @@ function initCanvas() {
 }
 
 // Theme Toggle Functionality
-const themeToggle = document.getElementById('themeToggle');
-const themeIcon = themeToggle.querySelector('i');
+const themeToggle = document.getElementById("theme-toggle");
+const themeIcon = themeToggle ? themeToggle.querySelector('i') : null;
+
+if (themeToggle) {
+    themeToggle.addEventListener("click", () => {
+        document.body.classList.toggle("light-mode");
+
+        // Save theme
+        if (document.body.classList.contains("light-mode")) {
+            localStorage.setItem("theme", "light");
+        } else {
+            localStorage.setItem("theme", "dark");
+        }
+    });
+}
+
+// Load saved theme
+window.addEventListener("load", () => {
+    const savedTheme = localStorage.getItem("theme");
+
+    if (savedTheme === "light") {
+        document.body.classList.add("light-mode");
+    }
+});
 
 // Check for saved theme preference or default to dark mode
 const currentTheme = localStorage.getItem('theme') || 'dark';
 if (currentTheme === 'light') {
+const currentTheme = window.theme || 'dark';
+if (currentTheme === 'light' && themeIcon) {
     document.body.classList.add('light-mode');
     themeIcon.classList.remove('fa-moon');
     themeIcon.classList.add('fa-sun');
 }
 
-themeToggle.addEventListener('click', () => {
-    document.body.classList.toggle('light-mode');
+if (themeToggle && themeIcon) {
+    themeToggle.addEventListener('click', () => {
+        document.body.classList.toggle('light-mode');
 
     if (document.body.classList.contains('light-mode')) {
         themeIcon.classList.remove('fa-moon');
@@ -135,6 +160,17 @@ themeToggle.addEventListener('click', () => {
         localStorage.setItem('theme', 'dark');
     }
 });
+        if (document.body.classList.contains('light-mode')) {
+            themeIcon.classList.remove('fa-moon');
+            themeIcon.classList.add('fa-sun');
+            window.theme = 'light';
+        } else {
+            themeIcon.classList.remove('fa-sun');
+            themeIcon.classList.add('fa-moon');
+            window.theme = 'dark';
+        }
+    });
+}
 
 // Update Navbar for Login Status
 const buttons = document.getElementsByClassName('buttons')[0];
@@ -313,6 +349,16 @@ function fillTable() {
         ["Day 115", "Event Registration System", "https://event-registration-system-w10a.onrender.com/"],
         ["Day 116", "AI Image Classifier", "/public/AI Image CLassifier/index.html"]
     ];
+        ["Day 116", "AI Image Classifier", "./public/AI Image Classifier/index.html"]
+    ];
+    
+
+ 
+
+    const tbody = document.getElementById('tableBody');
+
+
+    renderTable();
 
     createPagination();
 }
