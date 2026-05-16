@@ -36,9 +36,9 @@ dotenv	Environment Variables
 
 📂 Project Structure
 
-mern-login-form/
-│
-├── backend/
+mern-login-form/ 
+│   
+├── backend/                                                                                                                                                                 
 │   ├── config/
 │   │   └── db.js
 │   │
