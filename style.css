@@ -182,7 +182,7 @@ body {
 #themeToggle:hover {
     background: var(--accent-color);
     color: #000;
-    transform: translateY(-3px) rotate(15deg);
+    
     box-shadow: 0 10px 25px var(--accent-glow);
 }
 
@@ -320,6 +320,13 @@ body {
     padding: 0 2rem;
     outline: none;
 }
+
+.stats-counter {
+      color: #00ff88;
+      font-family: 'Courier New', monospace;
+      margin-top: 8px;
+      font-size: 14px;
+    }
 
 .search-btn {
     background: var(--accent-color);
@@ -523,12 +530,18 @@ tbody td a:hover {
     thead { display: none; }
     tbody td { padding: 1.2rem 1rem; }
 }
+.light-theme {
+    background-color: #ffffff;
+    color: #000000;
+}
 
-.stats-counter {
-    color: #00ff88;
-    font-family: 'Courier New', monospace;
-    margin-top: 8px;
-    font-size: 14px;
+.light-theme .navbar {
+    background-color: #f5f5f5;
+}
+
+.light-theme .card {
+    background-color: #eaeaea;
+feature/pagination-project-list
 }
 
 .pagination-container {
@@ -554,11 +567,10 @@ tbody td a:hover {
     opacity: 0.5;
     cursor: not-allowed;
 }
-
-.pagination-container button:hover {
-    opacity: 0.9;
-}
-
 #no-projects {
     display: none;
+}
+.pagination-container button:hover {
+    opacity: 0.9
+
 }
