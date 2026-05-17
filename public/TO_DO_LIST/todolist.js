@@ -211,3 +211,111 @@ function updateNotesTheme() {
     }
   });
 }
+/* =========================
+   KANBAN DRAG DROP FEATURE
+   (Append below existing code)
+========================= */
+
+// Make all newly created notes draggable
+function enableDragForNotes() {
+  const notes = document.querySelectorAll(".notes");
+
+  notes.forEach((note, index) => {
+    note.setAttribute("draggable", true);
+    note.dataset.id = index;
+
+    note.addEventListener("dragstart", function (e) {
+      e.dataTransfer.setData("text/plain", note.dataset.id);
+    });
+  });
+}
+
+// Override existing Add() behavior slightly
+const originalAdd = Add;
+
+Add = function () {
+  originalAdd();
+  enableDragForNotes();
+  saveTaskState();
+};
+
+// Save task positions/status
+function saveTaskState() {
+  const pendingTasks = [];
+  const progressTasks = [];
+  const completedTasks = [];
+
+  document.querySelectorAll("#pending-list .notes").forEach(task => {
+    pendingTasks.push(task.outerHTML);
+  });
+
+  document.querySelectorAll("#progress-list .notes").forEach(task => {
+    progressTasks.push(task.outerHTML);
+  });
+
+  document.querySelectorAll("#completed-list .notes").forEach(task => {
+    completedTasks.push(task.outerHTML);
+  });
+
+  localStorage.setItem("pendingTasks", JSON.stringify(pendingTasks));
+  localStorage.setItem("progressTasks", JSON.stringify(progressTasks));
+  localStorage.setItem("completedTasks", JSON.stringify(completedTasks));
+}
+
+// Drag events
+function allowDrop(event) {
+  event.preventDefault();
+}
+
+function dropTask(event, sectionId) {
+  event.preventDefault();
+
+  const draggedId = event.dataTransfer.getData("text/plain");
+  const draggedTask = document.querySelector(
+    `.notes[data-id="${draggedId}"]`
+  );
+
+  if (draggedTask) {
+    document.getElementById(sectionId).appendChild(draggedTask);
+    saveTaskState();
+  }
+}
+
+// Restore tasks after refresh
+function loadTaskState() {
+  const sections = [
+    "pending-list",
+    "progress-list",
+    "completed-list"
+  ];
+
+  sections.forEach(section => {
+    const savedTasks = JSON.parse(
+      localStorage.getItem(
+        section === "pending-list"
+          ? "pendingTasks"
+          : section === "progress-list"
+          ? "progressTasks"
+          : "completedTasks"
+      )
+    ) || [];
+
+    const container = document.getElementById(section);
+
+    if (container) {
+      container.innerHTML = "";
+
+      savedTasks.forEach(taskHTML => {
+        container.innerHTML += taskHTML;
+      });
+    }
+  });
+
+  enableDragForNotes();
+}
+
+// Run when page loads
+window.onload = function () {
+  loadTaskState();
+  enableDragForNotes();
+};
