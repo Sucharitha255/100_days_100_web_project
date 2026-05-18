@@ -812,7 +812,7 @@ const PROJECT_DATA = [
     './public/image-particle-engine/index.html', 
     'javascript', 
     'intermediate'
-  ]
+  ],
     'Day 118',
     'Connect4 Game',
     './public/Connect4/index.html',
