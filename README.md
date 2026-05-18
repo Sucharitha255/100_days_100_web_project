@@ -185,8 +185,8 @@ The website features:
 | 114 | EchoNotes | HTML, CSS, JS | 📝 App | [View Demo](https://100-days-100-web-project.vercel.app/public/EchoNotes) |
 | 115 | Event Registration System | React, Node.js, Express, MongoDB | 📅 Full-Stack | [View Demo](https://event-registration-system-w10a.onrender.com/) |
 | 116 | AI Image Classifier | HTML, CSS, JS | 🧠 AI | [View Demo](https://100-days-100-web-project.vercel.app/public/AI%20Image%20Classifier) |
-| 117 | Buttons UI Page | HTML, CSS, JS | 🎨 UI Component | [View Demo](https://100-days-100-web-project.vercel.app/public/ButtonsUIPage) |
-| 118 | Color Palette Generator | HTML, CSS, JS | 🎨 Utility | [View Demo](https://100-days-100-web-project.vercel.app/public/color-palette-generator) |
+| 117 | Image To Particle Engine | HTML, CSS, JS | 🖼️ Animation | [View Demo](https://100-days-100-web-project.vercel.app/public/image-particle-engine) |
+| 118 | Connect4 Game | HTML, CSS, JS | 🎮 Game | [View Demo](https://100-days-100-web-project.vercel.app/public/Connect4) |
 | 119 | Color Picker | HTML, CSS, JS | 🎨 Utility | [View Demo](https://100-days-100-web-project.vercel.app/public/color_picker) |
 | 120 | Countdown Timer | HTML, CSS, JS | ⏰ Widget | [View Demo](https://100-days-100-web-project.vercel.app/public/CountDown%20Timer) |
 

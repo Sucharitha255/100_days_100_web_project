@@ -352,7 +352,7 @@ const PROJECT_DATA = [
   [
     'Day 50',
     'Recipe Genie',
-    'https://github.com/dhairyagothi/100_days_100_web_project/tree/Main/public/Recipe-Genie',
+    'https://github.com/dhairyagothi/100_days_100_web_project/tree/Main/public/Recipe%20Genie',
     'api javascript',
     'intermediate',
   ],
@@ -807,33 +807,33 @@ const PROJECT_DATA = [
     'intermediate',
   ],
   [
-    'Day 117',
-    'Buttons UI Page',
-    './public/ButtonsUIPage/index.html',
-    'ui css',
-    'easy',
+    'Day 117', 
+    'Image To Particle Engine', 
+    './public/image-particle-engine/index.html', 
+    'javascript', 
+    'intermediate'
   ],
   [
     'Day 118',
-    'Color Palette Generator',
-    './public/color-palette-generator/index.html',
-    'utility javascript',
-    'easy',
+    'Connect4 Game',
+    './public/Connect4/index.html',
+    'javascript game',
+    'intermediate'
   ],
   [
     'Day 119',
     'Color Picker',
     './public/color_picker/index.html',
     'utility javascript',
-    'easy',
+    'easy'
   ],
   [
     'Day 120',
     'Countdown Timer',
     './public/CountDown Timer/index.html',
     'widget javascript',
-    'easy',
-  ],
+    'easy'
+  ]
 ];
 
 // Alias for consistency
