@@ -59,7 +59,7 @@ jobs:
               raise SystemExit("Could not find contributors section in README.md")
 
           contributors_section = section_match.group(2)
-          cells = re.findall(r"(\s*<td align=\"center\">.*?</td>)", contributors_section, re.DOTALL)
+          cells = re.findall(r"(<td align=\"center\">.*?</td>)", contributors_section, re.DOTALL)
 
           if not cells:
               raise SystemExit("No contributor cells found in README contributors section")
@@ -159,15 +159,19 @@ jobs:
                   item[0],
               )
           )
-          sorted_cells = [item[2].rstrip() for item in contributors]
+          def normalize_cell_html(cell):
+              lines = [line.strip() for line in cell.strip().splitlines() if line.strip()]
+              return "\n".join(lines)
+
+          sorted_cells = [normalize_cell_html(item[2]) for item in contributors]
 
           rows = []
           for idx in range(0, len(sorted_cells), columns_per_row):
               row_cells = sorted_cells[idx : idx + columns_per_row]
               row_content = "\n".join(row_cells)
-              rows.append(f"\t\t<tr>\n{row_content}\n\t\t</tr>")
+              rows.append(f"<tr>\n{row_content}\n</tr>")
 
-          rebuilt_table = "<table>\n\t<tbody>\n" + "\n".join(rows) + "\n\t</tbody>\n</table>"
+          rebuilt_table = "<table>\n<tbody>\n" + "\n".join(rows) + "\n</tbody>\n</table>"
           updated_content = (
               content[: section_match.start(2)]
               + rebuilt_table
