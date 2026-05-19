@@ -35,6 +35,7 @@ jobs:
           import json
           import os
           import re
+          import urllib.error
           import urllib.parse
           import urllib.request
           from datetime import datetime
@@ -43,6 +44,7 @@ jobs:
           readme_path = Path("README.md")
           start_marker = "<!-- readme: contributors -start -->"
           end_marker = "<!-- readme: contributors -end -->"
+          columns_per_row = 6
 
           content = readme_path.read_text(encoding="utf-8")
           section_match = re.search(
@@ -79,7 +81,7 @@ jobs:
               try:
                   with urllib.request.urlopen(request) as response:
                       payload = json.loads(response.read().decode("utf-8"))
-              except Exception:
+              except (urllib.error.HTTPError, urllib.error.URLError):
                   return None
 
               if not payload:
@@ -107,8 +109,8 @@ jobs:
           sorted_cells = [item[2].rstrip() for item in contributors]
 
           rows = []
-          for idx in range(0, len(sorted_cells), 6):
-              row_cells = sorted_cells[idx : idx + 6]
+          for idx in range(0, len(sorted_cells), columns_per_row):
+              row_cells = sorted_cells[idx : idx + columns_per_row]
               row_content = "\n".join(row_cells)
               rows.append(f"\t\t<tr>\n{row_content}\n\t\t</tr>")
 
