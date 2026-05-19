@@ -203,17 +203,11 @@ jobs:
           git commit -m "docs(readme): reorder contributors by latest commit [skip ci]"
 
           for attempt in 1 2 3; do
-            push_status=0
-            push_output="$(git push origin "HEAD:${TARGET_BRANCH}" 2>&1)" || push_status=$?
-            if [ "${push_status:-0}" -eq 0 ]; then
+            if push_output="$(git push origin "HEAD:${TARGET_BRANCH}" 2>&1)"; then
               exit 0
             fi
+            push_status=$?
             echo "${push_output}"
-
-            if ! grep -q "non-fast-forward" <<<"${push_output}"; then
-              echo "Push failed for a non-retryable reason."
-              exit "${push_status}"
-            fi
 
             if [ "${attempt}" -lt 3 ]; then
               echo "Push attempt ${attempt} failed; rebasing on origin/${TARGET_BRANCH} and retrying..."
