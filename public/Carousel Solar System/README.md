@@ -33,14 +33,14 @@ The project displays the Sun and all eight planets in a beautiful carousel inter
 ## 📂 Project Structure
 
 ```text
-Celestial-Solar-System/
+Carousel-Solar-System/
 │
-├── index.html
-├── style.css
-├── script.js
-├── favv.png
+├── index.html        # Main HTML file
+├── index.css         # Stylesheet for design and layout
+├── index.js          # JavaScript for carousel logic
+├── favv.png          # Favicon image
 │
-└── images/
+└── images/           # Planet and celestial body assets
     ├── sun-image.png
     ├── mercury-image.png
     ├── venus-image.png
@@ -48,8 +48,9 @@ Celestial-Solar-System/
     ├── mars-image.png
     ├── jupiter-image.png
     ├── saturn-image.png
-    ├── Uranus.png
-    └── Neptune.png
+    ├── uranus.png
+    └── neptune.png
+
 ```
 
 ---
