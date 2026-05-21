@@ -6,18 +6,19 @@ document.addEventListener("DOMContentLoaded", () => {
   let score = 0;
 
   function restartGame() {
-    document.getElementById('result').innerHTML = '';
+    document.getElementById('result').textContent = '';
     squares.forEach((square) => {
       updateTile(square, 0);
     });
 
     score = 0;
-    scoreDisplay.innerHTML = score;
+    scoreDisplay.textContent = score;
 
     generateTwo();
     generateTwo();
 
     document.addEventListener("keyup", control);
+
   }
 
   function createBoard() {
@@ -87,13 +88,15 @@ document.addEventListener("DOMContentLoaded", () => {
   function sumRow() {
     for (let i = 0; i < 15; i++) {
       if(i % 4 == 3) continue;
-      if (squares[i].innerHTML == squares[i + 1].innerHTML) {
+      if (squares[i].innerHTML !== '' &&
+    squares[i].innerHTML == squares[i + 1].innerHTML) {
         let combineNum = parseInt(squares[i].innerHTML) +
-          parseInt(squares[i + 1].innerHTML);
-       updateTile(squares[i], combineNum);
-      updateTile(squares[i + 1], 0);
+        parseInt(squares[i + 1].innerHTML);
+        updateTile(squares[i], combineNum);
+        updateTile(squares[i + 1], 0);
+        score = Number(score) || 0;
         score += combineNum;
-        scoreDisplay.innerHTML = score;
+        scoreDisplay.textContent = score;
       }
     }
   }
@@ -140,13 +143,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function sumColumn() {
     for (let i = 0; i < 12; i++) {
-      if (squares[i].innerHTML == squares[i + 4].innerHTML) {
-        let combineNum = parseInt(squares[i].innerHTML) +
-          parseInt(squares[i + 4].innerHTML);
+      if (squares[i].innerHTML !== '' && squares[i].innerHTML == squares[i + 4].innerHTML) {
+        let combineNum = parseInt(squares[i].innerHTML) + parseInt(squares[i + 4].innerHTML);
         updateTile(squares[i], combineNum);
         updateTile(squares[i + 4], 0);
+        score = Number(score) || 0;
         score += combineNum;
-        scoreDisplay.innerHTML = score;
+        scoreDisplay.textContent = score;
       }
     }
     checkWin();
