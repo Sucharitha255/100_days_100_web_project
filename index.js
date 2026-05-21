@@ -33,7 +33,7 @@ const PROJECT_DATA = [
   ['Day 14', 'File Uploader', 'https://github.com/dhairyagothi/100_days_100_web_project/tree/Main/public/file_uploader', 'javascript', 'intermediate'],
   ['Day 15', 'Progress Bar', './public/progress_bar/progress_bar.html', 'ui css javascript', 'beginner'],
   ['Day 16', 'Scroll Bar CSS', './public/Scroll Game Dark Run/index.html', 'css', 'beginner'],
-  ['Day 17', 'Slider Using Swiper API', './public/slider%20box/index.html', 'api javascript', 'intermediate'],
+  ['Day 17', 'Slider Using Swiper API', './public/slider%20box/', 'api javascript', 'intermediate'],
   ['Day 18', 'Carousel Solar System', './public/carousal/', 'css canvas', 'intermediate'],
   ['Day 19', 'Planto', './public/plantwebsite/plant.html', 'css', 'beginner'],
   ['Day 20', 'EveSparks', 'https://evesparks.onrender.com/', 'javascript', 'intermediate'],
