@@ -14,6 +14,10 @@
   var particles = [];
   var animFrame = null;
 
+  /* ── Bot state ──────────────────────────*/
+  var vsBot   = false;
+  var botMark = "O";
+
   var boardEl  = document.getElementById("board");
   var gameEl   = document.getElementById("game");
   var statusEl = document.getElementById("status-bar");
@@ -29,7 +33,28 @@
   var canvas   = document.getElementById("confetti-canvas");
   var ctx      = canvas.getContext("2d");
   var startScreen = document.getElementById("start-screen");
-  var startBtn = document.getElementById("start-btn");
+  var startBtn   = document.getElementById("start-btn");
+
+  // ── Mode screen (injected) ─────────────
+  var modeScreen = document.createElement("div");
+  modeScreen.id = "mode-screen";
+  modeScreen.innerHTML = `
+    <h2 class="mode-title">Choose Mode</h2>
+    <p class="mode-sub">How do you want to play?</p>
+    <div class="mode-btns">
+      <button class="mode-btn" id="btn-2p">
+        <span class="mode-icon">👥</span>
+        <span class="mode-label">2 Players</span>
+        <span class="mode-desc">Play with a friend</span>
+      </button>
+      <button class="mode-btn" id="btn-bot">
+        <span class="mode-icon">🤖</span>
+        <span class="mode-label">vs Bot</span>
+        <span class="mode-desc">Challenge the AI</span>
+      </button>
+    </div>
+  `;
+  document.body.appendChild(modeScreen);
 
   /* ── Build board ──────────────────────── */
   function buildBoard() {
@@ -49,6 +74,8 @@
   /* ── Handle cell click ────────────────── */
   function handleClick(i) {
     if (gameOver || board[i]) return;
+    if (vsBot && current === botMark) return;   // block clicks on bot's turn
+
     board[i] = current;
     buildBoard();
 
@@ -67,7 +94,78 @@
     } else {
       current = current === "X" ? "O" : "X";
       setUI(current);
+      if (vsBot && current === botMark) setTimeout(doBotMove, 480);
     }
+  }
+
+  /* ── Bot move ─────────────────────────── */
+  function doBotMove() {
+    if (gameOver) return;
+    var move = getBotMove();
+    if (move === -1) return;
+    board[move] = botMark;
+    buildBoard();
+
+    var win = checkWin();
+    if (win) {
+      highlightWin(win);
+      scores[botMark]++;
+      updateScores();
+      setTimeout(function () { showWinOverlay(botMark); }, 320);
+      gameOver = true;
+    } else if (board.every(Boolean)) {
+      scores.D++;
+      updateScores();
+      setTimeout(showDrawOverlay, 200);
+      gameOver = true;
+    } else {
+      current = current === "X" ? "O" : "X";
+      setUI(current);
+    }
+  }
+
+  /* ── Pick best move (minimax) ─────────── */
+  function getBotMove() {
+    var bestScore = -Infinity;
+    var bestMove  = -1;
+    for (var i = 0; i < 9; i++) {
+      if (!board[i]) {
+        board[i] = botMark;
+        var score = minimax(board, 0, false);
+        board[i] = null;
+        if (score > bestScore) { bestScore = score; bestMove = i; }
+      }
+    }
+    return bestMove;
+  }
+
+  /* ── Minimax ──────────────────────────── */
+  function minimax(b, depth, isMax) {
+    var human  = botMark === "O" ? "X" : "O";
+    var winner = scanWinner(b);
+    if (winner === botMark) return 10 - depth;
+    if (winner === human)   return depth - 10;
+    if (b.every(Boolean))   return 0;
+
+    var best = isMax ? -Infinity : Infinity;
+    for (var i = 0; i < 9; i++) {
+      if (!b[i]) {
+        b[i] = isMax ? botMark : human;
+        var score = minimax(b, depth + 1, !isMax);
+        b[i] = null;
+        best = isMax ? Math.max(best, score) : Math.min(best, score);
+      }
+    }
+    return best;
+  }
+
+  /* ── Scan board for a winner ──────────── */
+  function scanWinner(b) {
+    for (var i = 0; i < WIN_LINES.length; i++) {
+      var l = WIN_LINES[i];
+      if (b[l[0]] && b[l[0]] === b[l[1]] && b[l[0]] === b[l[2]]) return b[l[0]];
+    }
+    return null;
   }
 
   /* ── Check winner ─────────────────────── */
@@ -93,7 +191,8 @@
     pillO.classList.toggle("active", player === "O");
     gameEl.className = player === "X" ? "turn-x" : "turn-o";
     statusEl.className = player === "X" ? "sx" : "so";
-    statusEl.textContent = player ? player + "'s turn!" : "";
+    var label = (vsBot && player === botMark) ? "Bot" : player;
+    statusEl.textContent = player ? label + "'s turn!" : "";
   }
 
   /* ── Update scoreboard ────────────────── */
@@ -105,11 +204,12 @@
 
   /* ── Win overlay ──────────────────────── */
   function showWinOverlay(player) {
-    winText.className  = player === "X" ? "col-x" : "col-o";
+    winText.className   = player === "X" ? "col-x" : "col-o";
     winText.textContent = "CONGRATULATIONS!";
-    winSub.textContent  = "Player " + player + " wins the round!";
-    winBtn.className   = player === "X" ? "btn-x" : "btn-o";
-    overlay.className  = "show " + (player === "X" ? "ov-x" : "ov-o");
+    var label = (vsBot && player === botMark) ? "Bot" : "Player " + player;
+    winSub.textContent  = label + " wins the round!";
+    winBtn.className    = player === "X" ? "btn-x" : "btn-o";
+    overlay.className   = "show " + (player === "X" ? "ov-x" : "ov-o");
     launchConfetti(player);
   }
 
@@ -131,6 +231,7 @@
     setUI("X");
     overlay.className = "";
     stopConfetti();
+    if (vsBot && current === botMark) setTimeout(doBotMove, 480);
   }
 
   /* ── Reset all ────────────────────────── */
@@ -203,16 +304,37 @@
   document.getElementById("btn-restart").addEventListener("click", nextRound);
   document.getElementById("win-btn").addEventListener("click", nextRound);
 
-  /* ── Init ─────────────────────────────── */
+  /* ── Start → mode screen ──────────────── */
   startBtn.addEventListener("click", function () {
     startScreen.classList.add("hide-screen");
-
     setTimeout(function () {
-       startScreen.style.display = "none";
-       gameEl.classList.remove("hidden");
-      gameEl.classList.add("show-game");
+      startScreen.style.display = "none";
+      modeScreen.classList.add("show");
     }, 600);
   });
+
+  document.getElementById("btn-2p").addEventListener("click", function () {
+    vsBot = false;
+    launchGame();
+  });
+
+  document.getElementById("btn-bot").addEventListener("click", function () {
+    vsBot = true;
+    launchGame();
+  });
+
+  /* ── Mode screen → game ───────────────── */
+  function launchGame() {
+    modeScreen.classList.remove("show");
+    modeScreen.classList.add("hide");
+    setTimeout(function () {
+      modeScreen.style.display = "none";
+      gameEl.classList.remove("hidden");
+      gameEl.classList.add("show-game");
+    }, 400);
+  }
+
+  /* ── Init ─────────────────────────────── */
   buildBoard();
   setUI("X");
 
