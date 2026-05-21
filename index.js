@@ -185,6 +185,10 @@ const PROJECT_DATA = [
   ['Day 142', 'Geo Guesser game', './public/geo-guesser/index.html', 'map game', 'intermediate'],
   ['Day 143', 'Morse Code Translator', './public/MorseCodeTranslator/index.html', 'html css javascript', 'beginner'],
   ['Day 144', 'Car Racing game', './public/racing game/index.html', 'html css js', 'intermediate'],
+<<<<<<< HEAD
+=======
+  ['Day 145', 'Magic 8 Ball', './public/magic-8ball/main.html', 'simulation html css javascript', 'beginner'],
+>>>>>>> 64430030 (fixed numbering and indexjs conflict)
   
 ];
 // Alias for consistency
