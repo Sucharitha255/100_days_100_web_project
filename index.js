@@ -17,6 +17,25 @@ let filteredProjectData = [];
 let currentCategory = 'all';
 let currentDifficulty = 'all';
 
+/* ============================================================
+   TECHNOLOGY STACK FILTERING VARIABLES
+   ============================================================ */
+let techStackFilters = []; // Array of active tech filters
+let techSearchQuery = ''; // Current tech search input
+
+// Technology normalization map (handles common variations)
+// Maps user input → actual tags in dataset
+const TECH_ALIASES = {
+  'js': 'javascript',
+  'react': 'javascript', // React projects are tagged as 'javascript'
+  'node': 'javascript',  // Node projects are tagged as 'javascript'
+  'vue': 'javascript',
+  'python': 'api',       // Python/Flask projects are tagged as 'api javascript'
+  'flask': 'api',
+  'game': 'game',
+  'games': 'game',
+};
+
 const PROJECT_DATA = [
   [
     'Day 1',
@@ -813,6 +832,127 @@ const PROJECTS = PROJECT_DATA;
 console.log('PROJECTS defined:', PROJECTS.length, 'items');
 
 /* ============================================================
+   TECHNOLOGY STACK FILTERING FUNCTIONS
+   ============================================================ */
+
+/**
+ * Normalize technology name for consistent matching
+ * SIMPLIFIED: Just lowercase, no complex aliases needed
+ * @param {string} tech - Technology name to normalize
+ * @returns {string} Normalized technology name
+ */
+function normalizeTech(tech) {
+  const lower = tech.toLowerCase().trim();
+  // Only handle common variations
+  return TECH_ALIASES[lower] || lower;
+}
+
+/**
+ * Check if project matches the active tech stack filters
+ * EFFICIENT APPROACH: Direct string matching without complex transformations
+ * @param {string|array} projectTags - Project tags (space-separated string or array)
+ * @returns {boolean} True if project matches all active filters
+ */
+function matchesTechStack(projectTags) {
+  // No filters = show all projects
+  if (techStackFilters.length === 0) return true;
+  
+  // Handle empty or missing tags
+  if (!projectTags) return false;
+  
+  // Convert to single lowercase string for efficient matching
+  const tagsLower = (typeof projectTags === 'string' ? projectTags : projectTags.join(' ')).toLowerCase();
+  
+  // EFFICIENT: Check if ALL filters exist in tags (AND logic)
+  // Uses simple includes() - O(n*m) where n=filters, m=tag length
+  return techStackFilters.every(filter => tagsLower.includes(filter));
+}
+
+
+/**
+ * Remove a specific technology filter
+ * @param {string} tech - Technology to remove from filters
+ */
+function removeTechFilter(tech) {
+  techStackFilters = techStackFilters.filter(t => t !== tech);
+  updateTechFilterDisplay();
+  renderGrid();
+}
+
+/**
+ * Clear all technology filters
+ */
+function clearAllTechFilters() {
+  techStackFilters = [];
+  techSearchQuery = '';
+  
+  const input = document.getElementById('techStackSearch');
+  if (input) input.value = '';
+  
+  updateTechFilterDisplay();
+  renderGrid();
+}
+
+/**
+ * Update the visual display of active tech filters
+ */
+function updateTechFilterDisplay() {
+  const container = document.getElementById('activeTechFilters');
+  const tagsContainer = document.getElementById('techFilterTags');
+  const clearBtn = document.getElementById('clearTechFilter');
+  
+  if (!container || !tagsContainer) return;
+  
+  // Show/hide clear button in search input
+  if (clearBtn) {
+    clearBtn.style.display = techStackFilters.length > 0 ? 'block' : 'none';
+  }
+  
+  // Show/hide active filters container
+  if (techStackFilters.length === 0) {
+    container.style.display = 'none';
+    return;
+  }
+  
+  container.style.display = 'flex';
+  
+  // Render filter tags with remove buttons
+  tagsContainer.innerHTML = techStackFilters.map(tech => `
+    <span class="tech-filter-tag">
+      ${tech}
+      <button onclick="removeTechFilter('${tech}')" aria-label="Remove ${tech} filter">
+        <i class="fas fa-times"></i>
+      </button>
+    </span>
+  `).join('');
+}
+
+/**
+ * Get all unique technologies from projects (optional utility)
+ * EFFICIENT: Uses Set for O(1) lookups
+ * @returns {array} Sorted array of unique technologies
+ */
+function getAllTechnologies() {
+  const techSet = new Set();
+  
+  PROJECTS.forEach(([, , , tags]) => {
+    if (tags) {
+      const tagArray = typeof tags === 'string' 
+        ? tags.split(/\s+/).filter(t => t) 
+        : tags;
+      
+      tagArray.forEach(tag => {
+        techSet.add(tag.toLowerCase());
+      });
+    }
+  });
+  
+  const techs = Array.from(techSet).sort();
+  console.log('Available technologies:', techs); // Debug: show available techs
+  return techs;
+}
+
+/* ============================================================
    BOOKMARK + RECENT SYSTEM
 ============================================================ */
 
@@ -906,13 +1046,23 @@ function renderGrid() {
   const noResults = document.getElementById('noResults');
   if (!grid) return;
 
-  const filtered = PROJECTS.filter(([day, name, , , cat]) => {
+  const filtered = PROJECTS.filter(([day, name, , tags, cat]) => {
+    // 1. Category filter (beginner/intermediate)
     const matchesFilter = activeFilter === 'all' || cat === activeFilter;
+    
+    // 2. Name/Day search
     const q = searchQuery.toLowerCase();
     const matchesSearch =
       !q || name.toLowerCase().includes(q) || day.toLowerCase().includes(q);
-    return matchesFilter && matchesSearch;
+    
+    // 3. Technology stack filter (NEW)
+    const matchesTech = matchesTechStack(tags);
+    
+    // Combine all three filters
+    return matchesFilter && matchesSearch && matchesTech;
   });
+
+  console.log('Filtered projects:', filtered.length, 'out of', PROJECTS.length); // Debug log
 
   grid.innerHTML = '';
 
@@ -1252,6 +1402,61 @@ function initSearch() {
   });
 }
 
+/* ============================================================
+   TECH STACK SEARCH INITIALIZATION
+   ============================================================ */
+function initTechStackSearch() {
+  const input = document.getElementById('techStackSearch');
+  const clearBtn = document.getElementById('clearTechFilter');
+  
+  if (!input) return;
+  
+  // Debounce timer for performance
+  let debounceTimer;
+  
+  // Listen for input changes
+  input.addEventListener('input', (e) => {
+    clearTimeout(debounceTimer);
+    
+    // Debounce: wait 300ms after user stops typing
+    debounceTimer = setTimeout(() => {
+      const value = e.target.value.trim().toLowerCase();
+      
+      if (value) {
+        // Split by comma or space to support multiple technologies
+        // More efficient: direct lowercase conversion
+        const techs = value.split(/[,\s]+/).filter(t => t.length > 0);
+        
+        // Update filters array (already lowercase, no need to normalize yet)
+        techStackFilters = [...new Set(techs)]; // Remove duplicates efficiently
+        
+        console.log('Tech filters active:', techStackFilters); // Debug log
+        
+        updateTechFilterDisplay();
+        renderGrid();
+      } else {
+        // Empty input = clear all filters
+        clearAllTechFilters();
+      }
+    }, 300); // 300ms debounce delay
+  });
+  
+  // Clear button functionality
+  if (clearBtn) {
+    clearBtn.addEventListener('click', () => {
+      clearAllTechFilters();
+    });
+  }
+  
+  // Optional: Add Enter key support
+  input.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      input.blur(); // Trigger the debounced input event
+    }
+  });
+}
+
 function syncProjectCounts() {
   const total = PROJECTS.length.toLocaleString();
   const countNodes = [
@@ -1360,10 +1565,15 @@ document.addEventListener('DOMContentLoaded', () => {
     typeof PROJECTS,
     PROJECTS ? PROJECTS.length : 'undefined'
   );
+  
+  // Show available technologies for debugging
+  getAllTechnologies();
+  
   initTheme();
   updateNavbar();
   initFilterChips();
   initSearch();
+  initTechStackSearch(); // Initialize tech stack search
   syncProjectCounts();
   renderGrid();
   renderBookmarks();
@@ -1388,3 +1598,10 @@ backToTopButton.addEventListener("click", () => {
         behavior: "smooth"
     });
 });
+
+/* ============================================================
+   EXPOSE FUNCTIONS TO GLOBAL SCOPE
+   (Required for HTML onclick handlers)
+   ============================================================ */
+window.removeTechFilter = removeTechFilter;
+window.clearAllTechFilters = clearAllTechFilters;
