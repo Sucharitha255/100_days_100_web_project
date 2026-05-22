@@ -296,7 +296,14 @@ function renderGrid() {
       (typeof tags === 'string' && tags.toLowerCase().includes(term))
     );
 
-    return matchesFilter && matchesSearch;
+    // Tech stack filter
+    let matchesTechStack = true;
+    if (techStackFilter !== 'all') {
+      const tagStr = (typeof tags === 'string' ? tags : '').toLowerCase();
+      matchesTechStack = tagStr.includes(techStackFilter.toLowerCase());
+    }
+
+    return matchesFilter && matchesSearch && matchesTechStack;
   });
 
   const totalPages = Math.ceil(filtered.length / itemsPerPage);
@@ -709,8 +716,12 @@ function initFilterChips() {
 }
 
 /* ============================================================
-   LIVE SEARCH
+   LIVE SEARCH 
    ============================================================ */
+
+// Add this variable at the top with your other variables (let searchQuery = ''; etc.)
+let techStackFilter = 'all';
+
 function initSearch() {
   const input = document.getElementById('searchInput');
   if (!input) return;
@@ -719,10 +730,37 @@ function initSearch() {
     currentPage = 1;
     renderGrid();
   });
+  
+  // Tech stack filter listener
+  const techStack = document.getElementById('techStackFilter');
+  if (techStack) {
+    techStack.addEventListener('change', () => {
+      techStackFilter = techStack.value;
+      currentPage = 1;
+      renderGrid();
+    });
+  }
 }
 
 function syncProjectCounts() {
-  const total = PROJECTS.length.toLocaleString();
+  // Apply filters to get accurate count
+  let filtered = [...PROJECTS];
+  
+  if (searchQuery) {
+    filtered = filtered.filter(project =>
+      project.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (project.description && project.description.toLowerCase().includes(searchQuery.toLowerCase()))
+    );
+  }
+  
+  // Tech stack filter for count
+  if (techStackFilter !== 'all') {
+    filtered = filtered.filter(project => 
+      project.techStack && project.techStack === techStackFilter
+    );
+  }
+  
+  const total = filtered.length.toLocaleString();
   const countNodes = [document.getElementById('projectCount'), document.getElementById('allCount')];
 
   countNodes.forEach((node) => {
@@ -731,7 +769,7 @@ function syncProjectCounts() {
 
   const searchInput = document.getElementById('searchInput');
   if (searchInput) {
-    searchInput.placeholder = `Search ${total} projects…`;
+    searchInput.placeholder = `Search ${PROJECTS.length.toLocaleString()} projects…`;
   }
 }
 
