@@ -1138,6 +1138,45 @@ document.addEventListener('DOMContentLoaded', () => {
   initScrollBtn();
 });
 
+
+
+(() => {
+    const initDirectMobileMenu = () => {
+        const menuToggle = document.getElementById('menuToggle');
+        const navButtons = document.getElementById('navButtons');
+
+        if (!menuToggle || !navButtons) return;
+
+        menuToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            menuToggle.classList.toggle('active');
+            navButtons.classList.toggle('active');
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!navButtons.contains(e.target) && !menuToggle.contains(e.target)) {
+                menuToggle.classList.remove('active');
+                navButtons.classList.remove('active');
+            }
+        });
+
+        navButtons.addEventListener('click', (e) => {
+            if (e.target.closest('.btn') || e.target.closest('a') || e.target.closest('button')) {
+                menuToggle.classList.remove('active');
+                navButtons.classList.remove('active');
+            }
+        });
+    };
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initDirectMobileMenu);
+    } else {
+        initDirectMobileMenu();
+    }
+})();
+
+
+
 // Re-render the grid when the browser window is resized to adapt pagination density instantly
 window.addEventListener('resize', () => {
   renderGrid();
