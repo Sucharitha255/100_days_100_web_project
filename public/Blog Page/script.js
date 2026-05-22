@@ -141,8 +141,7 @@ bookmarkFill.addEventListener("click", () => {
 // SHARE BUTTON
 // =======================
 
-const shareButton =
-    document.querySelectorAll(".cursor-pointer")[2];
+const shareButton = document.getElementById("share");
 
 shareButton.addEventListener("click", async () => {
     try {
