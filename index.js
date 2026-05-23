@@ -104,7 +104,7 @@ const PROJECT_DATA = [
   ['Day 33', 'Weather Forecasting', './public/Weather%20Forcasting/index.html', 'weather api', 'intermediate'],
   ['Day 34', 'Email Validator', './public/email%20validator/index.html', 'api javascript', 'beginner'],
   ['Day 35', 'Vanilla-JavaScript-Calculator', './public/Vanilla-JavaScript-Calculator-master/index.html', 'tool javascript', 'beginner'],
-['Day 36', 'Medical App', './public/Medical_App/index.html', 'javascript', 'intermediate'],
+  ['Day 36', 'Medical App', './public/Medical_App/index.html', 'javascript', 'intermediate'],
   ['Day 37', '2048 Game', './public/2048_game/index.html', 'game javascript', 'intermediate'],
   ['Day 38', 'Github Profile Finder', './public/github_profile_finder/index.html', 'api javascript', 'intermediate'],
   ['Day 39', 'Notes App', './public/notes-app/index.html', 'todo javascript', 'beginner'],
@@ -227,8 +227,10 @@ const PROJECT_DATA = [
   ['Day 156', 'Placement Predictor', './public/Placement-Predictor/index.html', 'tool javascript html css', 'advanced'],
   ['Day 157', 'Map Route Tracker', './public/Vector-Map-Route-Tracer/index.html', 'html css javascript', 'advanced'],
   ['Day 158', 'GitHub Promo Maker', './public/GitHubPromoMaker/index.html', 'html css javascript', 'intermediate'],
-  ['Day 159' , 'Dining Philosophers Simulation' , './public/Dining Philosophers Simulation/index.html' , 'simulation algorithm javascript' , 'intermediate' ] ,
+  ['Day 159', 'Dining Philosophers Simulation', './public/Dining Philosophers Simulation/index.html', 'simulation algorithm javascript', 'intermediate'],
   ['Day 160', 'Website Personalizer', './public/WebsitePersonalizer/index.html', 'html css javascript', 'intermediate'],
+  ['Day 161', 'Color Palette From Art Generator', './public/ColorPaletteArtGenerator/index.html', 'html css javascript', 'intermediate'],
+
 ];
 const PROJECTS = PROJECT_DATA;
 
@@ -543,11 +545,11 @@ function renderGrid() {
   pageItems.forEach(([day, name, url, tags]) => {
     const category = getCategoryFromTags(tags, name);
     const card = document.createElement('div');
-    
+
     // FIX PART 1: Add a pointer cursor so users know it's clickable
     card.className = 'project-card';
-    card.style.cursor = 'pointer'; 
-    
+    card.style.cursor = 'pointer';
+
     // FIX PART 2: Make the whole card clickable to open the demo in a new tab
     card.onclick = () => window.open(url.trim(), '_blank');
 
@@ -1279,7 +1281,7 @@ window.addEventListener('resize', () => {
    (Required for HTML onclick handlers)
    ============================================================ */
 window.removeTechFilter = removeTechFilter;
-window.clearAllTechFilters = clearAllTechFilters; 
+window.clearAllTechFilters = clearAllTechFilters;
 
 // Particle Network Background
 (function () {
@@ -1301,7 +1303,7 @@ window.clearAllTechFilters = clearAllTechFilters;
         y: Math.random() * H,
         vx: (Math.random() - 0.5) * 0.3,
         vy: (Math.random() - 0.5) * 0.3,
-        r: Math.random() * 3 + 1, 
+        r: Math.random() * 3 + 1,
         hue: [220, 260, 280][Math.floor(Math.random() * 3)],
         alpha: Math.random() * 0.8 + 0.4,
       });
@@ -1368,11 +1370,11 @@ function updateURL(search, category) {
 function restoreStateFromURL() {
   const { search, category } = getQueryParams();
   const searchInput = document.getElementById('search') ||
-                      document.querySelector('input[type="text"]') ||
-                      document.querySelector('.search-input');
+    document.querySelector('input[type="text"]') ||
+    document.querySelector('.search-input');
   if (searchInput && search) searchInput.value = search;
   const categoryFilter = document.querySelector('select') ||
-                          document.getElementById('category');
+    document.getElementById('category');
   if (categoryFilter && category !== 'all') categoryFilter.value = category;
   if (search || category !== 'all') applyFilters(search, category);
 }
@@ -1391,8 +1393,8 @@ function applyFilters(search, category) {
 document.addEventListener('DOMContentLoaded', () => {
   restoreStateFromURL();
   const searchInput = document.getElementById('search') ||
-                      document.querySelector('input[type="text"]') ||
-                      document.querySelector('.search-input');
+    document.querySelector('input[type="text"]') ||
+    document.querySelector('.search-input');
   if (searchInput) {
     searchInput.addEventListener('input', () => {
       const { category } = getQueryParams();
@@ -1401,7 +1403,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
   const categoryFilter = document.querySelector('select') ||
-                          document.getElementById('category');
+    document.getElementById('category');
   if (categoryFilter) {
     categoryFilter.addEventListener('change', () => {
       const { search } = getQueryParams();
