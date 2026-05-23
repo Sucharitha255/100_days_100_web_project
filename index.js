@@ -2,8 +2,8 @@
    CONFIGURATION
    ============================================================ */
 if (typeof REPO_OWNER === 'undefined') {
-    window.REPO_OWNER = "dhairyagothi";
-    window.REPO_NAME  = "100_days_100_web_project";
+  window.REPO_OWNER = 'dhairyagothi';
+  window.REPO_NAME = '100_days_100_web_project';
 }
 window.REPO_OWNER = window.REPO_OWNER || 'dhairyagothi';
 window.REPO_NAME = window.REPO_NAME || '100_days_100_web_project';
@@ -140,10 +140,24 @@ const PROJECT_DATA = [
 const PROJECTS = PROJECT_DATA;
 console.log('PROJECTS defined:', PROJECTS.length, 'items');
 
+/* ============================================================
+   BOOKMARK + RECENT SYSTEM
+============================================================ */
+
+let bookmarkedProjects =
+  JSON.parse(localStorage.getItem('bookmarkedProjects')) || [];
+
+let recentProjects = JSON.parse(localStorage.getItem('recentProjects')) || [];
+
+let showAllBookmarks = false;
+let showAllRecent = false;
+
+const INITIAL_VISIBLE_ITEMS = 3;
+
 // Category labels mapping
 const CATEGORY_LABEL = {
-    'beginner': 'Beginner',
-    'intermediate': 'Intermediate'
+  beginner: 'Beginner',
+  intermediate: 'Intermediate',
 };
 console.log('CATEGORY_LABEL defined:', CATEGORY_LABEL);
 
@@ -151,95 +165,105 @@ console.log('CATEGORY_LABEL defined:', CATEGORY_LABEL);
 // 2. GITHUB REPO STATS
 // ============================================
 async function fetchRepoStats() {
-    try {
-        const [repoRes, prRes] = await Promise.all([
-            fetch(`https://api.github.com/repos/${window.REPO_OWNER}/${window.REPO_NAME}`),
-            fetch(`https://api.github.com/search/issues?q=repo:${window.REPO_OWNER}/${window.REPO_NAME}+type:pr+state:open`)
-        ]);
-        if (!repoRes.ok || !prRes.ok) throw new Error("Stats fetch failed");
-        const repo = await repoRes.json();
-        const prs  = await prRes.json();
+  try {
+    const [repoRes, prRes] = await Promise.all([
+      fetch(
+        `https://api.github.com/repos/${window.REPO_OWNER}/${window.REPO_NAME}`
+      ),
+      fetch(
+        `https://api.github.com/search/issues?q=repo:${window.REPO_OWNER}/${window.REPO_NAME}+type:pr+state:open`
+      ),
+    ]);
+    if (!repoRes.ok || !prRes.ok) throw new Error('Stats fetch failed');
+    const repo = await repoRes.json();
+    const prs = await prRes.json();
 
-        const set = (id, val) => {
-            const el = document.getElementById(id);
-            if (el) el.textContent = Number(val).toLocaleString();
-        };
-        set('starCount',  repo.stargazers_count);
-        set('forkCount',  repo.forks_count);
-        set('issueCount', repo.open_issues_count - prs.total_count);
-        set('prCount',    prs.total_count);
-    } catch (e) {
-        console.warn("GitHub stats unavailable:", e.message);
-    }
+    const set = (id, val) => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = Number(val).toLocaleString();
+    };
+    set('starCount', repo.stargazers_count);
+    set('forkCount', repo.forks_count);
+    set('issueCount', repo.open_issues_count - prs.total_count);
+    set('prCount', prs.total_count);
+  } catch (e) {
+    console.warn('GitHub stats unavailable:', e.message);
+  }
 }
 
 // NOTE (difficulty): Generating content client-side must sanitize URLs and
 // avoid heavy sync work; large project lists may block the main thread.
 
 function generateReadme() {
-    try {
-        const lines = [];
-        lines.push('# 100 Days · 100 Web Projects');
-        lines.push('A curated archive of frontend experiments — browse, fork, contribute.');
-        lines.push('');
-        lines.push('## Projects');
-        PROJECTS.forEach(([day, name, url, tags, cat]) => {
-            const safeUrl = url || '';
-            const tagList = (tags || []).join(', ');
-            lines.push(`- **${day} — ${name}** — ${safeUrl} — _${cat}_ — ${tagList}`);
-        });
+  try {
+    const lines = [];
+    lines.push('# 100 Days · 100 Web Projects');
+    lines.push(
+      'A curated archive of frontend experiments — browse, fork, contribute.'
+    );
+    lines.push('');
+    lines.push('## Projects');
+    PROJECTS.forEach(([day, name, url, tags, cat]) => {
+      const safeUrl = url || '';
+      const tagList = (tags || []).join(', ');
+      lines.push(`- **${day} — ${name}** — ${safeUrl} — _${cat}_ — ${tagList}`);
+    });
 
-        const blob = new Blob([lines.join('\n')], { type: 'text/markdown' });
-        const a = document.createElement('a');
-        a.href = URL.createObjectURL(blob);
-        a.download = 'README.md';
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        URL.revokeObjectURL(a.href);
-    } catch (e) {
-        console.error('Failed to generate README:', e);
-        alert('Could not generate README. See console for details.');
-    }
+    const blob = new Blob([lines.join('\n')], { type: 'text/markdown' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'README.md';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(a.href);
+  } catch (e) {
+    console.error('Failed to generate README:', e);
+    alert('Could not generate README. See console for details.');
+  }
 }
 
 /* ============================================================
    RENDER PROJECT GRID
    ============================================================ */
 let activeFilter = 'all';
-let searchQuery  = '';
+let searchQuery = '';
 
 function renderGrid() {
-    const grid = document.getElementById('projectGrid');
-    const noResults = document.getElementById('noResults');
-    if (!grid) return;
+  const grid = document.getElementById('projectGrid');
+  const noResults = document.getElementById('noResults');
+  if (!grid) return;
 
-    const filtered = PROJECTS.filter(([day, name, , , cat]) => {
-        const matchesFilter = activeFilter === 'all' || cat === activeFilter;
-        const q = searchQuery.toLowerCase();
-        const matchesSearch = !q || name.toLowerCase().includes(q) || day.toLowerCase().includes(q);
-        return matchesFilter && matchesSearch;
-    });
+  const filtered = PROJECTS.filter(([day, name, , , cat]) => {
+    const matchesFilter = activeFilter === 'all' || cat === activeFilter;
+    const q = searchQuery.toLowerCase();
+    const matchesSearch =
+      !q || name.toLowerCase().includes(q) || day.toLowerCase().includes(q);
+    return matchesFilter && matchesSearch;
+  });
 
-    grid.innerHTML = '';
+  grid.innerHTML = '';
 
-    if (filtered.length === 0) {
-        grid.style.display = 'none';
-        noResults.style.display = 'block';
-        return;
-    }
+  if (filtered.length === 0) {
+    grid.style.display = 'none';
+    noResults.style.display = 'block';
+    return;
+  }
 
-    grid.style.display = 'grid';
-    noResults.style.display = 'none';
+  grid.style.display = 'grid';
+  noResults.style.display = 'none';
 
-    filtered.forEach(([day, name, url, tags, cat]) => {
-        const card = document.createElement('div');
-        card.className = 'project-card';
+  filtered.forEach(([day, name, url, tags, cat]) => {
+    const card = document.createElement('div');
+    card.className = 'project-card';
+    const isBookmarked = bookmarkedProjects.some((item) => item[0] === day);
+    const tagsArray =
+      typeof tags === 'string' ? tags.split(/\s+/).filter((t) => t) : tags;
+    const tagsHTML = tagsArray
+      .map((t) => `<span class="tag">${t}</span>`)
+      .join('');
 
-        const tagsArray = typeof tags === 'string' ? tags.split(/\s+/).filter(t => t) : tags;
-        const tagsHTML = tagsArray.map(t => `<span class="tag">${t}</span>`).join('');
-
-        card.innerHTML = `
+    card.innerHTML = `
             <div class="card-meta">
                 <span class="card-day">${day}</span>
                 <span class="card-category">${CATEGORY_LABEL[cat] || cat}</span>
@@ -247,74 +271,346 @@ function renderGrid() {
             <div class="card-name">${name}</div>
             <div class="card-tags">${tagsHTML}</div>
             <div class="card-footer">
-                <a href="${url.trim()}" target="_blank" class="card-link" rel="noopener noreferrer">
-                    View Demo <i class="fas fa-arrow-right"></i>
-                </a>
-            </div>
+
+            <a href="${url.trim()}"
+               target="_blank"
+               class="card-link open-project"
+               data-id="${day}"
+               rel="noopener noreferrer">
+
+                View Demo <i class="fas fa-arrow-right"></i>
+            </a>
+
+            <button class="bookmark-btn ${isBookmarked ? 'active' : ''}"
+                    data-id="${day}">
+
+                <i class="${isBookmarked ? 'fa-solid' : 'fa-regular'} fa-bookmark"></i>
+
+            </button>  
+
+        </div>
         `;
 
-        grid.appendChild(card);
-    });
+    grid.appendChild(card);
+  });
 }
+
+function toggleBookmark(project) {
+  const exists = bookmarkedProjects.find((item) => item[0] === project[0]);
+
+  if (exists) {
+    bookmarkedProjects = bookmarkedProjects.filter(
+      (item) => item[0] !== project[0]
+    );
+
+    showToast('Bookmark removed');
+  } else {
+    bookmarkedProjects.push(project);
+
+    showToast('Project bookmarked');
+  }
+
+  localStorage.setItem(
+    'bookmarkedProjects',
+    JSON.stringify(bookmarkedProjects)
+  );
+
+  renderBookmarks();
+  renderGrid();
+  renderRecentProjects();
+}
+
+function trackRecentProject(project) {
+  recentProjects = recentProjects.filter((item) => item[0] !== project[0]);
+
+  recentProjects.unshift(project);
+
+  if (recentProjects.length > 10) {
+    recentProjects.pop();
+  }
+
+  localStorage.setItem('recentProjects', JSON.stringify(recentProjects));
+
+  renderRecentProjects();
+}
+
+const bookmarkGrid = document.getElementById('bookmarkGrid');
+
+function renderBookmarks() {
+  if (!bookmarkGrid) return;
+
+  bookmarkGrid.innerHTML = '';
+
+  if (bookmarkedProjects.length === 0) {
+    bookmarkGrid.innerHTML = `
+            <p class="empty-state">
+                No bookmarked projects yet.
+            </p>
+        `;
+
+    return;
+  }
+
+  if (bookmarkToggleBtn) {
+    bookmarkToggleBtn.style.display =
+      bookmarkedProjects.length <= INITIAL_VISIBLE_ITEMS
+        ? 'none'
+        : 'inline-flex';
+  }
+
+  const visibleBookmarks = showAllBookmarks
+    ? bookmarkedProjects
+    : bookmarkedProjects.slice(0, INITIAL_VISIBLE_ITEMS);
+
+  visibleBookmarks.forEach(([day, name, url, tags, cat]) => {
+    const card = document.createElement('div');
+
+    card.className = 'project-card';
+
+    const tagsHTML = tags
+      .split(' ')
+      .map((tag) => `<span class="tag">${tag}</span>`)
+      .join('');
+
+    card.innerHTML = `
+            <div class="card-meta">
+                <span class="card-day">${day}</span>
+
+                <span class="card-category">
+                    ${CATEGORY_LABEL[cat]}
+                </span>
+            </div>
+
+            <div class="card-name">${name}</div>
+
+            <div class="card-tags">
+                ${tagsHTML}
+            </div>
+
+           <div class="card-footer">
+
+   <a href="${url}"
+   target="_blank"
+   class="card-link open-project"
+   data-id="${day}">
+
+        View Demo
+        <i class="fas fa-arrow-right"></i>
+    </a>
+
+    <button class="bookmark-btn active"
+            data-id="${day}">
+
+        <i class="fa-solid fa-bookmark"></i>
+    </button>
+
+</div>
+        `;
+
+    bookmarkGrid.appendChild(card);
+  });
+}
+
+const recentGrid = document.getElementById('recentGrid');
+
+function renderRecentProjects() {
+  if (!recentGrid) return;
+
+  recentGrid.innerHTML = '';
+
+  if (recentProjects.length === 0) {
+    recentGrid.innerHTML = `
+            <p class="empty-state">
+                No recently viewed projects.
+            </p>
+        `;
+
+    return;
+  }
+
+  if (recentToggleBtn) {
+    recentToggleBtn.style.display =
+      recentProjects.length <= INITIAL_VISIBLE_ITEMS ? 'none' : 'inline-flex';
+  }
+
+  const visibleRecent = showAllRecent
+    ? recentProjects
+    : recentProjects.slice(0, INITIAL_VISIBLE_ITEMS);
+
+  visibleRecent.forEach(([day, name, url, tags, cat]) => {
+    const card = document.createElement('div');
+
+    card.className = 'project-card';
+
+    const tagsHTML = tags
+      .split(' ')
+      .map((tag) => `<span class="tag">${tag}</span>`)
+      .join('');
+    const isBookmarked = bookmarkedProjects.some((item) => item[0] === day);
+    card.innerHTML = `
+    <div class="card-meta">
+        <span class="card-day">${day}</span>
+
+        <span class="card-category">
+            ${CATEGORY_LABEL[cat]}
+        </span>
+    </div>
+
+    <div class="card-name">${name}</div>
+
+    <div class="card-tags">
+        ${tagsHTML}
+    </div>
+
+    <div class="card-footer">
+
+        <a href="${url}"
+           target="_blank"
+           class="card-link open-project"
+           data-id="${day}">
+
+            View Demo
+            <i class="fas fa-arrow-right"></i>
+        </a>
+
+        <button class="bookmark-btn ${isBookmarked ? 'active' : ''}"
+                data-id="${day}">
+
+            <i class="${isBookmarked ? 'fa-solid' : 'fa-regular'} fa-bookmark"></i>
+        </button>
+
+    </div>
+`;
+    recentGrid.appendChild(card);
+  });
+}
+
+/* ============================================
+   VIEW ALL TOGGLE
+============================================ */
+
+const bookmarkToggleBtn = document.getElementById('bookmarkToggleBtn');
+
+const recentToggleBtn = document.getElementById('recentToggleBtn');
+
+if (bookmarkToggleBtn) {
+  bookmarkToggleBtn.addEventListener('click', () => {
+    showAllBookmarks = !showAllBookmarks;
+
+    bookmarkToggleBtn.textContent = showAllBookmarks ? 'Show Less' : 'View All';
+
+    renderBookmarks();
+  });
+}
+
+if (recentToggleBtn) {
+  recentToggleBtn.addEventListener('click', () => {
+    showAllRecent = !showAllRecent;
+
+    recentToggleBtn.textContent = showAllRecent ? 'Show Less' : 'View All';
+
+    renderRecentProjects();
+  });
+}
+
+function showToast(message) {
+  const toast = document.getElementById('toast');
+
+  toast.textContent = message;
+
+  toast.classList.add('show');
+
+  setTimeout(() => {
+    toast.classList.remove('show');
+  }, 3000);
+}
+
+document.addEventListener('click', (e) => {
+  const bookmarkBtn = e.target.closest('.bookmark-btn');
+
+  if (!bookmarkBtn) return;
+
+  e.preventDefault();
+
+  const projectDay = bookmarkBtn.dataset.id;
+
+  const project = PROJECTS.find((item) => item[0] === projectDay);
+
+  toggleBookmark(project);
+});
+
+document.addEventListener('click', (e) => {
+  const projectLink = e.target.closest('.open-project');
+
+  if (!projectLink) return;
+
+  const projectDay = projectLink.dataset.id;
+
+  const project = PROJECTS.find((item) => item[0] === projectDay);
+
+  if (!project) return;
+
+  trackRecentProject(project);
+});
 
 /* ============================================================
    FILTER CHIPS
    ============================================================ */
 function initFilterChips() {
-    const chips = document.querySelectorAll('.chip[data-filter]');
-    chips.forEach(chip => {
-        chip.addEventListener('click', () => {
-            chips.forEach(c => c.classList.remove('active'));
-            chip.classList.add('active');
-            activeFilter = chip.dataset.filter;
-            renderGrid();
-        });
+  const chips = document.querySelectorAll('.chip[data-filter]');
+  chips.forEach((chip) => {
+    chip.addEventListener('click', () => {
+      chips.forEach((c) => c.classList.remove('active'));
+      chip.classList.add('active');
+      activeFilter = chip.dataset.filter;
+      renderGrid();
     });
+  });
 }
 
 /* ============================================================
    LIVE SEARCH
    ============================================================ */
 function initSearch() {
-    const input = document.getElementById('searchInput');
-    if (!input) return;
-    input.addEventListener('input', () => {
-        searchQuery = input.value.trim();
-        renderGrid();
-    });
+  const input = document.getElementById('searchInput');
+  if (!input) return;
+  input.addEventListener('input', () => {
+    searchQuery = input.value.trim();
+    renderGrid();
+  });
 }
 
 function syncProjectCounts() {
-    const total = PROJECTS.length.toLocaleString();
-    const countNodes = [
-        document.getElementById('projectCount'),
-        document.getElementById('allCount'),
-    ];
+  const total = PROJECTS.length.toLocaleString();
+  const countNodes = [
+    document.getElementById('projectCount'),
+    document.getElementById('allCount'),
+  ];
 
-    countNodes.forEach(node => {
-        if (node) node.textContent = total;
-    });
+  countNodes.forEach((node) => {
+    if (node) node.textContent = total;
+  });
 
-    const searchInput = document.getElementById('searchInput');
-    if (searchInput) {
-        searchInput.placeholder = `Search ${total} projects…`;
-    }
+  const searchInput = document.getElementById('searchInput');
+  if (searchInput) {
+    searchInput.placeholder = `Search ${total} projects…`;
+  }
 }
 
 /* ============================================================
    NAVBAR — dynamic based on login state
    ============================================================ */
 function updateNavbar() {
-    const container = document.getElementById('navButtons');
-    if (!container) return;
+  const container = document.getElementById('navButtons');
+  if (!container) return;
 
-    const username = window.username || null;
-    const isRoot   = !window.location.pathname.includes('/contributors/');
-    const base     = isRoot ? '' : '../';
-    const isDark   = !document.body.classList.contains('light-mode');
+  const username = window.username || null;
+  const isRoot = !window.location.pathname.includes('/contributors/');
+  const base = isRoot ? '' : '../';
+  const isDark = !document.body.classList.contains('light-mode');
 
-    if (username) {
-        container.innerHTML = `
+  if (username) {
+    container.innerHTML = `
             <span class="welcome-text">Hi, ${username}</span>
             <button class="btn btn-ghost btn-sm" id="logoutBtn">Log out</button>
             <button class="btn btn-ghost btn-sm" id="generateReadmeBtn">Generate README</button>
@@ -323,14 +619,14 @@ function updateNavbar() {
             </a>
             <a class="btn btn-ghost btn-sm" href="${base}contributors/contributor.html">Contributors</a>
         `;
-        document.getElementById('logoutBtn').addEventListener('click', () => {
-            window.username = null;
-            updateNavbar();
-        });
-        const gen = document.getElementById('generateReadmeBtn');
-        if (gen) gen.addEventListener('click', generateReadme);
-    } else {
-        container.innerHTML = `
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      window.username = null;
+      updateNavbar();
+    });
+    const gen = document.getElementById('generateReadmeBtn');
+    if (gen) gen.addEventListener('click', generateReadme);
+  } else {
+    container.innerHTML = `
             <a class="btn btn-ghost btn-sm" href="${base}contributors/contributor.html">Contributors</a>
             <a class="btn btn-ghost btn-sm" href="https://github.com/dhairyagothi" target="_blank">
                 <i class="fab fa-github"></i> GitHub
@@ -338,62 +634,85 @@ function updateNavbar() {
             <button class="btn btn-ghost btn-sm" id="generateReadmeBtn">Generate README</button>
             <a class="btn btn-primary btn-sm" href="${base}public/Login.html">Sign in</a>
         `;
-        const gen2 = document.getElementById('generateReadmeBtn');
-        if (gen2) gen2.addEventListener('click', generateReadme);
-    }
+    const gen2 = document.getElementById('generateReadmeBtn');
+    if (gen2) gen2.addEventListener('click', generateReadme);
+  }
 }
 
 /* ============================================================
    THEME TOGGLE
    ============================================================ */
 function initTheme() {
-    const btn = document.getElementById('themeToggle');
-    if (!btn) return;
+  const btn = document.getElementById('themeToggle');
+  if (!btn) return;
 
-    const icon = btn.querySelector('i');
-    const saved = localStorage.getItem('theme') || 'dark';
+  const icon = btn.querySelector('i');
+  const saved = localStorage.getItem('theme') || 'dark';
 
-    if (saved === 'light') {
-        document.body.classList.add('light-mode');
-        icon.className = 'fas fa-sun';
-    }
+  if (saved === 'light') {
+    document.body.classList.add('light-mode');
+    icon.className = 'fas fa-sun';
+  }
 
-    btn.addEventListener('click', () => {
-        document.body.classList.toggle('light-mode');
-        const isLight = document.body.classList.contains('light-mode');
-        icon.className = isLight ? 'fas fa-sun' : 'fas fa-moon';
-        localStorage.setItem('theme', isLight ? 'light' : 'dark');
-    });
+  btn.addEventListener('click', () => {
+    document.body.classList.toggle('light-mode');
+    const isLight = document.body.classList.contains('light-mode');
+    icon.className = isLight ? 'fas fa-sun' : 'fas fa-moon';
+    localStorage.setItem('theme', isLight ? 'light' : 'dark');
+  });
 }
 
 /* ============================================================
    SCROLL TO TOP
    ============================================================ */
 function initScrollBtn() {
-    const btn = document.getElementById('scrollBtn');
-    if (!btn) return;
+  const btn = document.getElementById('scrollBtn');
+  if (!btn) return;
 
-    window.addEventListener('scroll', () => {
-        btn.classList.toggle('show', window.scrollY > 400);
-    });
+  window.addEventListener('scroll', () => {
+    btn.classList.toggle('show', window.scrollY > 400);
+  });
 
-    btn.addEventListener('click', () => {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
+  btn.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
 }
 
 /* ============================================================
    INIT
    ============================================================ */
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('DOMContentLoaded fired');
-    console.log('PROJECTS:', typeof PROJECTS, PROJECTS ? PROJECTS.length : 'undefined');
-    initTheme();
-    updateNavbar();
-    initFilterChips();
-    initSearch();
-    syncProjectCounts();
-    renderGrid();
-    fetchRepoStats();
-    initScrollBtn();
+  console.log('DOMContentLoaded fired');
+  console.log(
+    'PROJECTS:',
+    typeof PROJECTS,
+    PROJECTS ? PROJECTS.length : 'undefined'
+  );
+  initTheme();
+  updateNavbar();
+  initFilterChips();
+  initSearch();
+  syncProjectCounts();
+  renderGrid();
+  renderBookmarks();
+  renderRecentProjects();
+  fetchRepoStats();
+  initScrollBtn();
+});
+
+const backToTopButton = document.getElementById("backToTop");
+
+window.addEventListener("scroll", () => {
+    if (window.scrollY > 200) {
+        backToTopButton.style.display = "block";
+    } else {
+        backToTopButton.style.display = "none";
+    }
+});
+
+backToTopButton.addEventListener("click", () => {
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
 });
