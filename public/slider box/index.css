@@ -5,10 +5,12 @@
 html, body {
   position: relative;
   min-height: 100%;
+  scroll-behavior: smooth;
 }
 
 body {
   margin: 0;
+
   padding: 0;
   font-family: Inter, "Segoe UI", Helvetica Neue, Arial, sans-serif;
   font-size: 14px;
@@ -156,13 +158,11 @@ button:hover {
 .dot:hover {
   background: rgba(255, 255, 255, 0.6);
 }
-
 /* ── Responsive ── */
 @media (max-width: 600px) {
   h1 {
     font-size: 28px;
   }
-
   .image-wrapper {
     width: 260px;
     height: 260px;

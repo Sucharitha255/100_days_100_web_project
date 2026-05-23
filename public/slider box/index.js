@@ -230,7 +230,6 @@ let photos = [
 ];
 
 let index = 0;
-
 // Preload all images for smooth transitions
 function preloadImages() {
   for (let i = 0; i < photos.length; i++) {
@@ -314,6 +313,7 @@ function prevPhoto() {
   showPhoto();
 }
 
+
 // Keyboard navigation support
 document.addEventListener("keydown", function(e) {
   if (e.key === "ArrowRight") nextPhoto();
@@ -336,4 +336,3 @@ window.onload = function() {
 
   updateCounter();
 };
-
