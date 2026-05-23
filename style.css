@@ -1356,25 +1356,41 @@ body.light-mode .navbar {
 }
 
 /* Theme toggle — lives in footer-bottom */
-#themeToggle {
+#themeToggle,
+#themeToggleNav {
   background: transparent;
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
-  width: 32px;
-  height: 32px;
+  min-width: 32px;
+  height: 36px;
   color: var(--text-muted);
-  font-size: 0.8125rem;
+  font-size: 0.9rem;
   cursor: pointer;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: 0.5rem;
+  padding: 0.25rem 0.6rem;
   transition: var(--t);
 }
 
-#themeToggle:hover {
+#themeToggle i,
+#themeToggleNav i {
+  transition: transform 0.25s var(--t), color 0.25s var(--t);
+}
+
+#themeToggle:hover,
+#themeToggleNav:hover {
   border-color: var(--border-hover);
   color: var(--text-primary);
   background: var(--bg-surface);
+  transform: translateY(-2px);
+}
+
+#themeToggle:hover i,
+#themeToggleNav:hover i {
+  transform: rotate(20deg);
+  color: var(--accent-color);
 }
 
 .menu-toggle {
@@ -1437,7 +1453,7 @@ body.light-mode .navbar {
 
     .nav-buttons.mobile-drawer-layer .btn {
         width: 100% !important;
-        max-width: 280px !important;
+      max-width: none !important;
         justify-content: center !important;
         text-align: center !important;
         padding: 0.8rem 1rem !important;
