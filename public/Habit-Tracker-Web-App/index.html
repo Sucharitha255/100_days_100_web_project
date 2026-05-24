@@ -151,6 +151,7 @@
               Unlock by maintaining any habit for 3 days continuously
             </span>
           </div>
+        </div>
 
           <div class="achievement-wrapper">
             <div class="achievement-badge locked" id="badge-7">
@@ -186,9 +187,34 @@
     </main>
   </div>
 
-  <div id="milestone-modal" class="modal-overlay">
-    <div class="modal-card">
-      <span class="modal-close" id="close-modal-btn">&times;</span>
+      <!-- SELECTED DATE DETAILS -->
+      <div class="glass-card context-card">
+        <h3>Selected Day Activity</h3>
+
+        <div id="selectedDateDetails" class="selected-date-details">
+          Click a date to view completed habits.
+        </div>
+      </div>
+
+      <!-- HABIT NOTES STATE -->
+      <div id="habitDetailsSection" class="context-panel hidden">
+        <div class="glass-card details-card">
+          <div class="details-header">
+            <div>
+              <button id="closeDetailsBtn" class="icon-btn" title="Back to overview">
+                <i data-lucide="arrow-left"></i>
+              </button>
+            </div>
+            <h3 id="detailsTitle">Habit Name</h3>
+            <span class="status-badge" id="detailsStatus"></span>
+          </div>
+          <div class="editor-wrapper">
+            <div id="editor"></div>
+          </div>
+        </div>
+      </div>
+
+    </aside>
 
       <div class="modal-content">
         <div class="modal-badge-icon">🎉</div>
@@ -198,6 +224,98 @@
         </p>
         <button id="milestone-btn">Awesome!</button>
       </div>
+      <div class="input-row">
+        <div class="input-group">
+          <label>Category</label>
+          <select id="addHabitCategory" class="category-select">
+            <option value="Personal">Personal</option>
+            <option value="Health">Health</option>
+            <option value="Work">Work</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <label>Time</label>
+          <select id="addHabitTimeLabel" class="category-select">
+            <option value="Anytime">Anytime</option>
+            <option value="Morning">Morning</option>
+            <option value="Afternoon">Afternoon</option>
+            <option value="Evening">Evening</option>
+            <option value="Night">Night</option>
+          </select>
+        </div>
+      </div>
+      <div class="input-group checkbox-group">
+        <input type="checkbox" id="addHabitPriority" />
+        <label for="addHabitPriority">High Priority</label>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-cancel" id="cancelAddBtn">Cancel</button>
+        <button class="btn-primary" id="confirmAddBtn">Create Habit</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE-OVER EDIT DRAWER -->
+  <div class="drawer-overlay hidden" id="editDrawerOverlay"></div>
+  <div class="drawer hidden" id="editDrawer">
+    <div class="drawer-header">
+      <h3>Edit Habit</h3>
+      <button class="icon-btn" id="closeDrawerBtn"><i data-lucide="x"></i></button>
+    </div>
+    <div class="drawer-body">
+      <div class="input-group">
+        <label>Habit Name</label>
+        <input type="text" id="editHabitInput" />
+      </div>
+      <div class="input-group">
+        <label>Category</label>
+        <select id="editHabitCategory" class="category-select">
+          <option value="Personal">Personal</option>
+          <option value="Health">Health</option>
+          <option value="Work">Work</option>
+        </select>
+      </div>
+      <div class="input-group">
+        <label>Time</label>
+        <select id="editHabitTimeLabel" class="category-select">
+          <option value="Anytime">Anytime</option>
+          <option value="Morning">Morning</option>
+          <option value="Afternoon">Afternoon</option>
+          <option value="Evening">Evening</option>
+          <option value="Night">Night</option>
+        </select>
+      </div>
+      <div class="input-group checkbox-group">
+        <input type="checkbox" id="editHabitPriority" />
+        <label for="editHabitPriority">High Priority</label>
+      </div>
+    </div>
+    <div class="drawer-footer">
+      <!-- Delete button injected here by JS -->
+      <button class="btn-primary" id="saveEditBtn">Save Changes</button>
+    </div>
+  </div>
+
+  <!-- DELETE CONFIRMATION MODAL -->
+  <div class="modal-overlay hidden" id="deleteModal">
+    <div class="modal-content glass-card delete-modal-content">
+      <h3>Delete Habit</h3>
+      <p class="modal-text">Are you sure you want to delete this habit? All history and notes will be permanently lost.</p>
+      <div class="modal-actions">
+        <button class="btn-cancel" id="cancelDeleteBtn">Cancel</button>
+        <button class="btn-danger" id="confirmDeleteBtn">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MILESTONE CELEBRATION MODAL -->
+  <div id="milestone-modal" class="modal-overlay hidden">
+    <div class="modal-card">
+      <span class="modal-close" id="close-modal-btn">&times;</span>
+      <div class="modal-badge-icon">🎉</div>
+      <h2>Milestone Unlocked!</h2>
+      <p id="milestone-message">You achieved a streak milestone!</p>
+      <button id="milestone-btn" class="btn-primary">Awesome!</button>
     </div>
   </div>
 

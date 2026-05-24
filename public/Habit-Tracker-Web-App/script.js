@@ -21,7 +21,9 @@ const deleteCloseBtn = document.getElementById("delete-close-btn");
 let habits = JSON.parse(localStorage.getItem("habits")) || [];
 let pendingDeleteIndex = null;
 
-/* DATE HELPERS */
+  hnew.completed = hnew.history.includes(todayStr);
+  return hnew;
+});
 
 function getTodayString() {
   const d = new Date();
@@ -121,11 +123,9 @@ function calculateMaxStreak(habit) {
   return max;
 }
 
-/* SAVE HABITS */
-
-function saveHabits() {
-  localStorage.setItem("habits", JSON.stringify(habits));
-}
+/* STREAK HELPERS */
+function getHabitStreak(history) {
+  if (!history || history.length === 0) return 0;
 
 /* MIGRATION */
 
@@ -152,9 +152,12 @@ saveHabits();
 
 /* DAILY RESET / RESET BROKEN STREAKS */
 
-function updateHabitsDailyStatus() {
-  const todayStr = getTodayString();
-  const yesterdayStr = getYesterdayString();
+  if (sorted.includes(currentStr)) {
+    streak++;
+    currentCheckDate.setDate(currentCheckDate.getDate() - 1);
+  } else {
+    currentCheckDate.setDate(currentCheckDate.getDate() - 1);
+    let yesterdayStr = currentCheckDate.toISOString().split("T")[0];
 
   habits.forEach(habit => {
     habit.completed = habit.completionDates.includes(todayStr);
@@ -162,15 +165,22 @@ function updateHabitsDailyStatus() {
     if (!habit.completed && habit.lastCompleted !== yesterdayStr) {
       habit.streak = 0;
     }
-  });
+  }
 
-  saveHabits();
+  return streak;
 }
 
-/* CHECK AND UPDATE ACHIEVEMENTS VISUALLY */
+function generateHistoryDots(history) {
+  let html = '<div class="history-tracker">';
+  const today = new Date();
 
-function checkMilestones() {
-  let maxStreakAcrossAll = 0;
+  for (let i = 4; i >= 0; i--) {
+    let d = new Date(today);
+    d.setDate(d.getDate() - i);
+    let dStr = d.toISOString().split("T")[0];
+    let isDone = history.includes(dStr);
+    html += `<span class="history-dot ${isDone ? "done" : ""}" title="${dStr}"></span>`;
+  }
 
   habits.forEach(habit => {
     if (habit.maxStreak && habit.maxStreak > maxStreakAcrossAll) {
@@ -178,56 +188,69 @@ function checkMilestones() {
     }
   });
 
-  const milestones = [
-    { id: "badge-3", streak: 3 },
-    { id: "badge-7", streak: 7 },
-    { id: "badge-30", streak: 30 }
-  ];
+/* NEW: CALENDAR VIEW */
+function renderCalendar() {
+  if (!calendarGrid || !calendarMonth) return;
 
-  milestones.forEach(m => {
-    const el = document.getElementById(m.id);
+  calendarGrid.innerHTML = "";
 
-    if (el) {
-      if (maxStreakAcrossAll >= m.streak) {
-        el.classList.remove("locked");
-        el.classList.add("unlocked");
-      } else {
-        el.classList.remove("unlocked");
-        el.classList.add("locked");
-      }
-    }
+  const year = currentCalendarDate.getFullYear();
+  const month = currentCalendarDate.getMonth();
+
+  calendarMonth.textContent = currentCalendarDate.toLocaleDateString("en-US", {
+    month: "long",
+    year: "numeric"
   });
-}
 
-/* MILESTONE CELEBRATION MODAL */
+  const firstDay = new Date(year, month, 1).getDay();
+  const totalDays = new Date(year, month + 1, 0).getDate();
 
-function checkMilestoneUnlocked(habitName, newStreak) {
-  if (newStreak === 3 || newStreak === 7 || newStreak === 30) {
-    showMilestoneModal(habitName, newStreak);
+  // Empty cells before first day
+  for (let i = 0; i < firstDay; i++) {
+    const emptyCell = document.createElement("div");
+    emptyCell.className = "calendar-day empty";
+    calendarGrid.appendChild(emptyCell);
   }
-}
 
-function showMilestoneModal(habitName, streak) {
-  const modal = document.getElementById("milestone-modal");
-  const msg = document.getElementById("milestone-message");
-  const icon = modal.querySelector(".modal-badge-icon");
+  // Real dates
+  for (let day = 1; day <= totalDays; day++) {
+    const date = new Date(year, month, day);
 
-  let medal = "🥉";
+    // FIXED DATE FORMAT
+    const localDate = new Date(
+      date.getTime() - date.getTimezoneOffset() * 60000
+    );
 
-  if (streak === 7) medal = "🥈";
-  if (streak === 30) medal = "🥇";
+    const dateStr = localDate.toISOString().split("T")[0];
 
-  icon.textContent = medal;
-  msg.textContent = `You achieved a ${streak}-Day streak on "${habitName}"! Keep it up! 🎉`;
+    const completedCount = habits.filter(h =>
+      h.history.includes(dateStr)
+    ).length;
 
-  modal.classList.add("show");
-}
+    const dayCell = document.createElement("div");
+    dayCell.className = "calendar-day";
 
-function hideMilestoneModal() {
-  const modal = document.getElementById("milestone-modal");
+    if (completedCount > 0) {
+      dayCell.classList.add("completed-day");
+    }
 
-  if (modal) {
-    modal.classList.remove("show");
+    // TODAY HIGHLIGHT
+    if (dateStr === getTodayStr()) {
+      dayCell.classList.add("today");
+    }
+
+    dayCell.innerHTML = `
+      <div class="calendar-date">${day}</div>
+      ${
+        completedCount > 0
+          ? `<div class="calendar-count">${completedCount}</div>`
+          : ""
+      }
+    `;
+
+    dayCell.title = `${completedCount} habits completed on ${dateStr}`;
+
+    calendarGrid.appendChild(dayCell);
   }
 }
 
@@ -293,10 +316,13 @@ function getWeeklyProgress(habit) {
   return { scheduledCount, completedCount, percent };
 }
 
-/* RENDER HABITS */
+  filteredHabits.forEach(habitItem => {
+    const index = habitItem.originalIndex;
+    const habit = habits[index];
+    const streak = getHabitStreak(habit.history);
 
-function renderHabits() {
-  habitList.innerHTML = "";
+    const li = document.createElement("li");
+    li.className = `habit-card fade-in ${index === selectedHabitIndex ? "active-card" : ""}`;
 
   habits.forEach((habit, index) => {
     const li = document.createElement("li");
@@ -342,8 +368,15 @@ function renderHabits() {
       </div>
     `;
 
-    const completeBtn = li.querySelector(".complete-btn");
-    const deleteBtn = li.querySelector(".delete-btn");
+    li.addEventListener("click", e => {
+      if (e.target.closest(".checkbox-btn") || e.target.closest(".habit-actions")) return;
+      selectHabit(index);
+    });
+
+    const checkboxBtn = li.querySelector(".checkbox-btn");
+    checkboxBtn.addEventListener("click", e => {
+      e.stopPropagation();
+      habit.completed = !habit.completed;
 
     completeBtn.addEventListener("click", () => {
       toggleComplete(index);
@@ -411,12 +444,27 @@ function renderAll() {
 }
 
 /* ADD HABIT */
+function openAddModal() {
+  addModal.classList.remove("hidden");
+}
 
-addHabitBtn.addEventListener("click", () => {
-  const habitName = habitInput.value.trim();
+fabAdd?.addEventListener("click", openAddModal);
 
-  if (habitName === "") {
-    alert("Please enter a habit");
+document.getElementById("cancelAddBtn")?.addEventListener("click", () => {
+  addModal.classList.add("hidden");
+  addHabitInput.value = "";
+});
+
+// Enter key support in add modal
+addHabitInput?.addEventListener("keypress", e => {
+  if (e.key === "Enter") document.getElementById("confirmAddBtn")?.click();
+});
+
+document.getElementById("confirmAddBtn")?.addEventListener("click", () => {
+  const name = addHabitInput.value.trim();
+
+  if (!name) {
+    alert("Please enter a habit name");
     return;
   }
 
@@ -450,47 +498,92 @@ addHabitBtn.addEventListener("click", () => {
   });
 });
 
-/* ENTER KEY SUPPORT */
+/* EDIT */
+function openEditDrawer(index) {
+  editingIndex = index;
+  const habit = habits[index];
 
-habitInput.addEventListener("keypress", (e) => {
-  if (e.key === "Enter") {
-    addHabitBtn.click();
+  editHabitInput.value        = habit.name;
+  editHabitCategory.value     = habit.category;
+  editHabitTimeLabel.value    = habit.timeLabel;
+  editHabitPriority.checked   = habit.priority;
+
+  editDrawer.classList.remove("hidden");
+  editDrawerOverlay.classList.remove("hidden");
+
+  setTimeout(() => editDrawer.classList.add("open"), 10);
+}
+
+function closeEditDrawer() {
+  editingIndex = null;
+  editDrawer.classList.remove("open");
+
+  setTimeout(() => {
+    editDrawer.classList.add("hidden");
+    editDrawerOverlay.classList.add("hidden");
+  }, 300);
+}
+
+document.getElementById("closeDrawerBtn")?.addEventListener("click", closeEditDrawer);
+editDrawerOverlay?.addEventListener("click", closeEditDrawer);
+
+document.getElementById("saveEditBtn")?.addEventListener("click", () => {
+  if (editingIndex === null) return;
+
+  const newName = editHabitInput.value.trim();
+  if (!newName) {
+    alert("Habit name cannot be empty");
+    return;
   }
+
+  habits[editingIndex].name      = newName;
+  habits[editingIndex].category  = editHabitCategory.value;
+  habits[editingIndex].timeLabel = editHabitTimeLabel.value;
+  habits[editingIndex].priority  = editHabitPriority.checked;
+
+  saveData();
+  renderDashboard();
+  closeEditDrawer();
 });
 
-/* THEME HANDLING */
+/* DELETE */
+const drawerFooter = document.querySelector(".drawer-footer");
+const deleteBtn = document.createElement("button");
 
+deleteBtn.className = "btn-danger";
+deleteBtn.textContent = "Delete";
+
+deleteBtn.addEventListener("click", () => {
+  habitToDeleteIndex = editingIndex;
+  deleteModal.classList.remove("hidden");
+});
+
+drawerFooter?.insertBefore(deleteBtn, document.getElementById("saveEditBtn"));
+
+document.getElementById("cancelDeleteBtn")?.addEventListener("click", () => {
+  deleteModal.classList.add("hidden");
+  habitToDeleteIndex = null;
+});
+
+document.getElementById("confirmDeleteBtn")?.addEventListener("click", () => {
+  if (habitToDeleteIndex === null) return;
+
+  habits.splice(habitToDeleteIndex, 1);
+
+  if (selectedHabitIndex === habitToDeleteIndex) showOverview();
+
+  saveData();
+  renderDashboard();
+  closeEditDrawer();
+  deleteModal.classList.add("hidden");
+});
+
+/* THEME */
 function setTheme(theme) {
-  if (theme === "dark") {
-    document.body.classList.add("dark-mode");
-    themeToggle.textContent = "☀️ Light Mode";
-  } else {
-    document.body.classList.remove("dark-mode");
-    themeToggle.textContent = "🌙 Dark Mode";
-  }
-
+  const isDark = theme === "dark";
+  document.body.classList.toggle("dark-mode", isDark);
+  document.getElementById("theme-text").textContent = isDark ? "Light Mode" : "Dark Mode";
   localStorage.setItem("theme", theme);
-}
-
-const savedTheme = localStorage.getItem("theme") || "light";
-setTheme(savedTheme);
-
-themeToggle.addEventListener("click", () => {
-  const isDark = document.body.classList.contains("dark-mode");
-  setTheme(isDark ? "light" : "dark");
-});
-
-/* MILESTONE MODAL EVENT LISTENERS */
-
-const closeModalBtn = document.getElementById("close-modal-btn");
-const milestoneBtn = document.getElementById("milestone-btn");
-
-if (closeModalBtn) {
-  closeModalBtn.addEventListener("click", hideMilestoneModal);
-}
-
-if (milestoneBtn) {
-  milestoneBtn.addEventListener("click", hideMilestoneModal);
 }
 
 /* DELETE MODAL EVENT LISTENERS */

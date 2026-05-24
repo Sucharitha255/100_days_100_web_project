@@ -4,6 +4,7 @@ body {
     padding: 20px;
     background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
@@ -33,8 +34,9 @@ body {
 .element {
     width: 65px;
     height: 85px;
+    box-sizing: border-box;
     background: rgba(255, 255, 255, 0.95);
-    border: none;
+    border: 2px solid transparent;
     border-radius: 10px;
     display: flex;
     flex-direction: column;
