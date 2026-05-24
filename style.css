@@ -963,6 +963,10 @@ color: var(--text-primary);
   transition: var(--t);
 }
 
+.category-count:empty {
+  display: none;
+}
+
 .chip.active .category-count {
   background: rgba(59, 130, 246, 0.15);
   color: var(--accent);

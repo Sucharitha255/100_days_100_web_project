@@ -594,7 +594,7 @@ function renderGrid() {
             </div>
         `;
 
-   fragment.appendChild(card);
+    fragment.appendChild(card);
   });
   grid.appendChild(fragment);
   renderPagination(filtered.length, totalPages);
@@ -1091,21 +1091,21 @@ const searchInput = document.getElementById('searchInput');
 const clearSearchBtn = document.getElementById('clearSearch');
 
 function updateCategoryCounts() {
-  const counts = {
-    'game': 0,
-    'clone': 0,
-    'tool': 0,
-    'ui': 0,
-    'api': 0
-  };
+  const counts = {};
+  for (const key of Object.keys(FILTER_CATEGORY_MAP)) {
+    if (key !== 'all') {
+      counts[key] = 0;
+    }
+  }
 
   PROJECTS.forEach(([day, name, url, tags]) => {
     const category = getCategoryFromTags(tags, name);
-    if (category === 'Games') counts['game']++;
-    else if (category === 'Clones') counts['clone']++;
-    else if (category === 'Tools') counts['tool']++;
-    else if (category === 'UI / Animation') counts['ui']++;
-    else if (category === 'APIs') counts['api']++;
+    const filterKey = Object.keys(FILTER_CATEGORY_MAP).find(
+      (key) => FILTER_CATEGORY_MAP[key] === category
+    );
+    if (filterKey && filterKey !== 'all') {
+      counts[filterKey]++;
+    }
   });
 
   const categorySpans = {
@@ -1118,7 +1118,7 @@ function updateCategoryCounts() {
 
   for (const [key, span] of Object.entries(categorySpans)) {
     if (span) {
-      span.textContent = counts[key];
+      span.textContent = counts[key].toLocaleString();
     }
   }
 }
@@ -1488,11 +1488,21 @@ function restoreStateFromURL() {
 }
 
 function applyFilters(search, category) {
-  earchQuery = search || '';
+  searchQuery = search || '';
   activeFilter = category || 'all';
   currentPage = 1;
+
+  // Sync active chip selection with URL state
+  const chips = document.querySelectorAll('.chip[data-filter]');
+  chips.forEach((chip) => {
+    if (chip.dataset.filter === activeFilter) {
+      chip.classList.add('active');
+    } else {
+      chip.classList.remove('active');
+    }
+  });
+
   renderGrid();
-  
 }
 
 document.addEventListener('DOMContentLoaded', () => {
