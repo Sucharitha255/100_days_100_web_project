@@ -235,7 +235,9 @@ const PROJECT_DATA = [
   [ 'Day 161' , "Unit-Converter" , './public/Unit-Converter/index.html' , 'tool javascript html css' , 'intermediate' ],
   [ 'Day 162' , 'Color Palette From Art Generator' , './public/ColorPaletteArtGenerator/index.html' , 'html css javascript' , 'intermediate' ],
   [ 'Day 163' , 'Ai Image Editor' , './public/image-editor/index.html' , 'edits images' , 'advanced' ],
-  [ "Day 164" , "Boredom Buster" , "./public/BoredomBuster/index.html" , "html css javascript" , 'advanced' ],
+  [ 'Day 164' , 'Code Visualizer Playground' , './public/code-visualizer-playground/index.html' , 'tool javascript html css' , 'advanced' ],
+  [ 'Day 165' , 'Amazon Clone' , './public/AmazonClone/index.html' , 'Amazon Clone HTML CSS JavaScript' , 'beginner' ],
+  [ "Day 166" , "Boredom Buster" , "./public/BoredomBuster/index.html" , "html css javascript" , 'advanced' ],
 ];
 const PROJECTS = PROJECT_DATA;
 
@@ -1231,9 +1233,6 @@ document.addEventListener('DOMContentLoaded', () => {
   initScrollBtn();
 
   if (hasProjectGrid()) {
-    initFilterChips();
-    initSearch();
-    initTechStackSearch();
     renderGrid();
     renderBookmarks();
     renderRecentProjects();
@@ -1405,25 +1404,21 @@ function updateURL(search, category) {
 
 function restoreStateFromURL() {
   const { search, category } = getQueryParams();
-  const searchInput = document.getElementById('search') ||
+  const searchInput = document.getElementById('searchInput') ||
     document.querySelector('input[type="text"]') ||
     document.querySelector('.search-input');
   if (searchInput && search) searchInput.value = search;
-  const categoryFilter = document.querySelector('select') ||
-    document.getElementById('category');
+  const categoryFilter = document.getElementById('category');
   if (categoryFilter && category !== 'all') categoryFilter.value = category;
   if (search || category !== 'all') applyFilters(search, category);
 }
 
 function applyFilters(search, category) {
-  const cards = document.querySelectorAll('.card, .project-card, .box');
-  cards.forEach(card => {
-    const title = (card.querySelector('h3,h4,.title')?.textContent || '').toLowerCase();
-    const tag = (card.dataset.category || card.dataset.tags || '').toLowerCase();
-    const matchSearch = !search || title.includes(search.toLowerCase());
-    const matchCategory = category === 'all' || tag.includes(category.toLowerCase());
-    card.style.display = matchSearch && matchCategory ? '' : 'none';
-  });
+  earchQuery = search || '';
+  activeFilter = category || 'all';
+  currentPage = 1;
+  renderGrid();
+  
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -1438,8 +1433,7 @@ document.addEventListener('DOMContentLoaded', () => {
       applyFilters(searchInput.value, category);
     });
   }
-  const categoryFilter = document.querySelector('select') ||
-    document.getElementById('category');
+  const categoryFilter = document.getElementById('category');
   if (categoryFilter) {
     categoryFilter.addEventListener('change', () => {
       const { search } = getQueryParams();
