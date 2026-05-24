@@ -678,7 +678,6 @@ body.light-mode .navbar {
   gap: 10px;
   width: 100%;
   max-width: 650px;
-  flex-wrap: wrap;
 }
 
 #sortProjects {
@@ -686,17 +685,17 @@ body.light-mode .navbar {
   height: 42px;
   padding: 0 12px;
   border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  background: #111827;
-  color: #ffffff;
+  border: 1px solid var(--border);
+  background: var(--bg-elevated);
+  color: var(--text-primary);
   cursor: pointer;
   outline: none;
   flex-shrink: 0;
 }
 
 #sortProjects option {
-  background: #111827;
-  color: #ffffff;
+ background: var(--bg-elevated);
+color: var(--text-primary);
 }
 
 .search-icon {
@@ -710,7 +709,8 @@ body.light-mode .navbar {
 }
 
 .search-input {
-  width: 100%;
+  flex: 1;
+  min-width: 250px;
   background: var(--bg-elevated);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
@@ -729,6 +729,29 @@ body.light-mode .navbar {
 .search-input:focus {
   border-color: var(--border-accent);
   background: var(--bg-surface);
+}
+
+.clear-btn {
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+
+  transition: 0.3s ease;
+
+  flex-shrink: 0;
+}
+
+.clear-btn:hover {
+  background: var(--bg-surface);
+  border-color: var(--border-hover);
 }
 
 /* ============================================================
