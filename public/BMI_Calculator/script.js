@@ -98,12 +98,7 @@ function bmiToPercent(bmi) {
     const MIN = 10, MAX = 45;
     const clamped = Math.min(Math.max(bmi, MIN), MAX);
     return ((clamped - MIN) / (MAX - MIN)) * 100;
-
-  const MIN = 10,
-    MAX = 45;
-  const clamped = Math.min(Math.max(bmi, MIN), MAX);
-  return ((clamped - MIN) / (MAX - MIN)) * 100;
-
+    
 }
 
 // ─── Chart.js setup ───
