@@ -1250,6 +1250,53 @@ window.addEventListener('resize', () => {
 window.removeTechFilter = removeTechFilter;
 window.clearAllTechFilters = clearAllTechFilters; 
 
+// Custom cursor
+(function () {
+  const outerCursor = document.querySelector('.cursor-ring--outer');
+  const innerCursor = document.querySelector('.cursor-ring--inner');
+
+  if (!outerCursor || !innerCursor) return;
+
+  const target = { x: 0, y: 0 };
+  const current = { x: 0, y: 0 };
+  const speed = 0.18;
+
+  const update = () => {
+    current.x += (target.x - current.x) * speed;
+    current.y += (target.y - current.y) * speed;
+
+    outerCursor.style.transform = `translate3d(${current.x}px, ${current.y}px, 0) translate(-50%, -50%)`;
+    innerCursor.style.transform = `translate3d(${target.x}px, ${target.y}px, 0) translate(-50%, -50%)`;
+
+    requestAnimationFrame(update);
+  };
+
+  const showCursor = () => {
+    outerCursor.classList.add('is-visible');
+    innerCursor.classList.add('is-visible');
+  };
+
+  const hideCursor = () => {
+    outerCursor.classList.remove('is-visible');
+    innerCursor.classList.remove('is-visible');
+  };
+
+  window.addEventListener(
+    'mousemove',
+    (event) => {
+      target.x = event.clientX;
+      target.y = event.clientY;
+      showCursor();
+    },
+    { passive: true }
+  );
+
+  window.addEventListener('mouseleave', hideCursor);
+  window.addEventListener('mouseenter', showCursor);
+
+  requestAnimationFrame(update);
+})();
+
 // Particle Network Background
 (function () {
   const canvas = document.getElementById('particleCanvas');
