@@ -165,6 +165,10 @@ body::after {
   animation: noiseShift 0.8s steps(2) infinite;
 }
 
+body > *:not(.ambient):not(.noise-layer) {
+    position: relative;
+}
+
 body>*:not(.ambient):not(.noise-layer):not(canvas):not(header) {
   position: relative;
   z-index: 1;

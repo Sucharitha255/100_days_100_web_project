@@ -65,7 +65,7 @@ function getCategoryFromTags(tags, name) {
 }
 
 const PROJECT_DATA = [
-  ['Day 1', 'To-Do List', './public/TO_DO_LIST/todolist.html', ['javascript', 'todo'], 'beginner'],
+['Day 1', 'To-Do List', './public/TO_DO_LIST/todolist.html', ['javascript', 'todo'], 'beginner'],
   ['Day 2', 'Digital Clock', './public/digital_clock/digitalclock.html', ['javascript'], 'beginner'],
   ['Day 3', 'Indian Flag', './public/indianflag/flag.html', ['css'], 'beginner'],
   ['Day 4', 'Dropdown Nav Bar', './public/dropdown_navbar/index.html', ['css'], 'beginner'],
@@ -231,9 +231,10 @@ const PROJECT_DATA = [
   ['Day 164', 'Code Visualizer Playground', './public/code-visualizer-playground/index.html', ['tool', 'javascript', 'html', 'css'], 'advanced'],
   ['Day 165', 'Amazon Clone', './public/AmazonClone/index.html', ['Amazon', 'Clone', 'HTML', 'CSS', 'JavaScript'], 'beginner'],
   ['Day 166', 'Boredom Buster', './public/BoredomBuster/index.html', ['html', 'css', 'javascript'], 'advanced'],
-  ['Day 167', 'scam-sms-detector', '/public/scam-sms-detector/index.html'],
+  ['Day 167', 'scam-sms-detector', '/public/scam-sms-detector/index.html', ['tool', 'api', 'javascript'], 'intermediate'],
   ['Day 168', 'Color Sort Puzzle game', './public/colorsort/index.html', ['html', 'css', 'javascript'], 'advanced'],
-  ['Day 169', 'Subscription Tracker', './public/subscriptiontracker/tracker.html', ['react', 'typescript', 'tailwindcss', 'ui'], 'advanced']
+  ['Day 169', 'Subscription Tracker', './public/subscriptiontracker/tracker.html', ['react', 'typescript', 'tailwindcss', 'ui'], 'advanced'],
+  ['Day 170', 'Vector Flowchart Designer', './public/VectorFlowchartDesigner/index.html', ['html', 'css', 'javascript'], 'advanced']
 ];
 const PROJECTS = PROJECT_DATA;
 
@@ -1559,7 +1560,7 @@ function restoreStateFromURL() {
 }
 
 function applyFilters(search, category) {
-  earchQuery = search || '';
+  searchQuery = search || '';
   activeFilter = category || 'all';
   currentPage = 1;
   renderGrid();
