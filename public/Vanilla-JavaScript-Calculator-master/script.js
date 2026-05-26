@@ -183,6 +183,12 @@ class Calculator {
         if (current < 0 || !Number.isInteger(current)) { this.setError(); return; }
         if (current > 170) { this.setError(); return; }
         result = this.factorial(current);
+        if (result === null) {
+        this.currentOperand = 'Error';
+        this.expression = 'Error';
+        this.updateDisplay();
+        return;
+        }
         break;
       case 'percent':
         result = current / 100;
