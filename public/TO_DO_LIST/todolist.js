@@ -149,6 +149,20 @@ function updateMetrics() {
 }
 
 // 4. Tab Navigation System
+// function showHome() {
+//   document.getElementById("btn-home").classList.add("active");
+//   document.getElementById("btn-docs").classList.remove("active");
+//   document.getElementById("home-tab").style.display = "block";
+//   document.getElementById("documents-tab").style.display = "none";
+// }
+
+// function showDocuments() {
+//   document.getElementById("btn-home").classList.remove("active");
+//   document.getElementById("btn-docs").classList.add("active");
+//   document.getElementById("home-tab").style.display = "none";
+//   document.getElementById("documents-tab").style.display = "block";
+// }
+
 function showHome() {
   document.getElementById("nav-home").classList.add("active");
   document.getElementById("nav-documents").classList.remove("active");
@@ -156,6 +170,8 @@ function showHome() {
   document.getElementById("home-tab").style.display = "block";
   document.getElementById("documents-tab").setAttribute("hidden", "");
   document.getElementById("documents-tab").style.display = "none";
+  document.getElementById("documents-tab").hidden = true;
+  document.getElementById("home-tab").hidden = false;
 }
 
 function showDocuments() {
@@ -165,6 +181,8 @@ function showDocuments() {
   document.getElementById("home-tab").style.display = "none";
   document.getElementById("documents-tab").removeAttribute("hidden");
   document.getElementById("documents-tab").style.display = "block";
+  document.getElementById("home-tab").hidden = true;
+  document.getElementById("documents-tab").hidden = false;
 }
 
 // Wire up nav link click listeners
