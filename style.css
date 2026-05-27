@@ -2556,6 +2556,17 @@ body::after {
     margin-top:16px;
 }
 
+.clear-filters-btn:hover {
+  background: var(--accent) !important;
+  color: #ffffff !important;
+  transform: scale(1.03);
+  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.25);
+}
+
+.clear-filters-btn:active {
+  transform: scale(0.97);
+}
+
 /* Navbar Container */
 .navbar {
   display: flex;
