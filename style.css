@@ -391,14 +391,7 @@ body.light-mode .navbar {
    HAMBURGER MENU
    ============================================================ */
 
-.menu-toggle {
-  display: none;
-  background: transparent;
-  border: none;
-  color: var(--text-primary);
-  font-size: 1.4rem;
-  cursor: pointer;
-}
+
 
 /* Mobile navbar */
 @media (max-width: 768px) {
@@ -1788,16 +1781,7 @@ body.light-mode .footer.homepage-footer .social-btn {
   color: var(--accent-color);
 }
 
-.menu-toggle {
-  display: none;
-  background: transparent;
-  border: none;
-  color: var(--text-primary);
-  font-size: 1.25rem;
-  cursor: pointer;
-  padding: 0.5rem;
-  transition: var(--t);
-}
+
 
 @media (max-width: 768px) {
   .navbar {
