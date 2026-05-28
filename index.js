@@ -160,9 +160,12 @@ function resolveProjectUrls(day, name, url, tags) {
 
   if (!sourceOnly && demoUrl && !demoUrl.startsWith('http')) {
     try {
-      demoUrl = new URL(demoUrl, window.location.href).href;
+      const isRoot = !window.location.pathname.includes('/contributors/');
+      const basePrefix = isRoot ? '' : '../';
+      if (demoUrl.startsWith('./')) {
+        demoUrl = basePrefix + demoUrl.substring(2);
+      }
     } catch (error) {
-      // Keep the original path if URL normalization fails.
     }
   }
 
@@ -171,8 +174,8 @@ function resolveProjectUrls(day, name, url, tags) {
 
 function getProjectDescription(project) {
   return (
-      project[5] ||
-      'Explore this project to discover interactive functionality.'
+    (project && project[5]) ||
+    'Explore this project to discover interactive functionality.'
   );
 }
 
