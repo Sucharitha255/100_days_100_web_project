@@ -1836,5 +1836,13 @@
   "techStack":["game","html","css","javascript"],
   "difficulty":"intermediate",
   "projectPath":"./public/Minesweeper/index.html"
+},{
+  "projectNo":184,
+  "projectName":"GitHub Repository Analyser",
+  "projectType":"tool",
+  "projectDesc":"A modern tool to quickly analyse a github repo , provides detail stats about repo.",
+  "techStack":["tool","html","css","javascript"],
+  "difficulty":"intermediate",
+  "projectPath":"./public/github-repository-analyser/index.html"
 }
 ]
