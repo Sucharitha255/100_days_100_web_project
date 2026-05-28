@@ -1819,4 +1819,14 @@
 "difficulty":"advanced",
 "projectPath":"./public/code-execution-visualizer/index.html"
 }
+,
+{
+  "projectNo": 183,
+  "projectName": "LeetCode Progress Tracker",
+  "projectType": "Tool",
+  "projectDesc": "Track solved LeetCode problems, coding streaks, difficulty-wise progress and coding analytics through an interactive dashboard.",
+  "techStack": ["tool","javascript","html","css","api"],
+  "difficulty": "advanced",
+  "projectPath": "./public/leetcode-progress-tracker/index.html"
+}
 ]
