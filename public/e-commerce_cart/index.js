@@ -306,3 +306,38 @@ clearCartBtn.addEventListener('click', () => {
   showToast("Cart cleared");
 
 });
+// Dark Mode
+
+const darkModeBtn = document.querySelector('#dark-mode-btn');
+
+if(localStorage.getItem("theme") === "dark"){
+  document.body.classList.add('dark-mode');
+
+  if(darkModeBtn){
+    darkModeBtn.innerText = "☀";
+  }
+}
+
+if(darkModeBtn){
+
+  darkModeBtn.addEventListener('click', () => {
+
+    document.body.classList.toggle('dark-mode');
+
+    if(document.body.classList.contains('dark-mode')){
+
+      localStorage.setItem("theme", "dark");
+
+      darkModeBtn.innerText = "☀";
+
+    } else {
+
+      localStorage.setItem("theme", "light");
+
+      darkModeBtn.innerText = "🌙";
+
+    }
+
+  });
+
+}
