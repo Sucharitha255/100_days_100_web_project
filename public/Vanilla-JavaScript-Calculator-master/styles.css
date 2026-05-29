@@ -7,19 +7,27 @@
   
   
   body {
-    padding: 0;
-    margin: 0;
-    background: linear-gradient(#41ade3,#11568f, #0d6e9e, #00e3ef);
+  padding: 0;
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(180deg, #1d328c 0%, #0e122b 100%);
   }
   
   
   .calculator-grid {
-    display: grid;
-    justify-content: center;
-    align-content: center;
-    min-height: 100vh;
-    grid-template-columns: repeat(4, 100px);
-    grid-template-rows: minmax(120px, auto) repeat(5, 100px);
+  display: grid;
+  grid-template-columns: repeat(4, 100px);
+  grid-template-rows: minmax(120px, auto) repeat(5, 100px);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+  backdrop-filter: blur(8px);
   }
   
   
@@ -30,19 +38,20 @@
   
   
   .calculator-grid > button {
-    cursor: pointer;
-    font-size: 1.5rem;
-    border: 1px solid white;
-    outline: none;
-    background-color: rgba(255, 255, 255, .75);
-   
+  cursor: pointer;
+  font-size: 1.5rem;
+  border: 1px solid rgba(255,255,255,0.25);
+  background: rgba(255,255,255,0.18);
+  color: #111;
+  transition: 0.2s ease;
+  border-radius: 10px;
   }
-  
-  
+
   .calculator-grid > button:hover {
-    background-color: rgba(255, 255, 255, .9);
+  transform: translateY(-2px);
+  background: rgba(255,255,255,0.32);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
   }
-  
   
   .span-two {
     grid-column: span 2;
@@ -50,29 +59,28 @@
   
   
   .output {
-    grid-column: 1 / -1;
-      background-color: rgba(0, 0, 0, .75);
-      display: flex;
-      align-items: flex-end;
-      justify-content: space-around;
-      flex-direction: column;
-      padding-right: 10px;
-      word-wrap: break-word;
-      word-break: break-all;
-      padding-left: 10px;
-     
+  grid-column: 1 / -1;
+  background: linear-gradient(to right, #021B2B, #032D46);
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  flex-direction: column;
+  padding: 20px;
+  word-wrap: break-word;
+  word-break: break-all;
+  position: relative;
   }
   
   
   .output .previous-operand {
-    color: rgba(255, 255, 255, .75);
-    font-size: 1.5rem;
+  color: rgba(255,255,255,.75);
+  font-size: 1.2rem;
   }
-  
-  
+
   .output .current-operand {
-    color: white;
-    font-size: 2.5rem;
+  color: white;
+  font-size: 2rem;
+  font-weight: bold;
   }
   
   
@@ -81,23 +89,29 @@
   }
   
   
-  #toggle-scientific {
-    width: 35.2px;
-    height: 32.2px;
-    margin-bottom: 0px;
-    place-self: flex-start;
+ .toggle-scientific {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+}
+
+.toggle-scientific img {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+}
+
+@media (max-width: 768px) {
+  .calculator-grid {
+    grid-template-columns: repeat(4, 75px);
+    grid-template-rows: minmax(100px, auto) repeat(5, 75px);
   }
-  #toggle-scientific {
-    border: none;
-    background: none;
-    cursor: pointer;
-    padding: 0;
+
+  .calculator-grid > button {
+    font-size: 1.2rem;
   }
-  
-  
-  #toggle-scientific img {
-    width: 35px;
-    height: 35px;
-    border-radius: 100px;
-  }
-  
+}

@@ -329,7 +329,7 @@ class Calculator {
   
   
   // Event listener for toggle scientific button
-  const toggleScientificButtons = document.querySelectorAll('#toggle-scientific');
+  const toggleScientificButtons = document.querySelectorAll('.toggle-scientific');
   toggleScientificButtons.forEach(button => {
     button.addEventListener('click', () => {
       document.getElementById('basic-calculator').classList.toggle('hidden');
