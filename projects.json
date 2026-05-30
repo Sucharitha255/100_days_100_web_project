@@ -2337,9 +2337,8 @@
       "techStack": ["html", "css", "javascript", "webrtc", "api"],
       "difficulty": "advanced",
       "projectPath": "./public/webrtc-video-chat/index.html"
-    }
-  
-     {
+    },
+    {
     "projectNo": 189,
      "projectName": "Endless train game",
     "projectType": "game",
@@ -2366,12 +2365,21 @@
     "projectPath": "./public/Planet_gesture_formation/index.html"
   },
   {
-  "projectNo": 190,
+  "projectNo": 191,
   "projectName": "Interactive Story Player",
   "projectType": "UI / Animation",
   "projectDesc": "A dynamic, choice-driven storytelling application where users shape their own narrative paths.",
   "techStack": ["ui", "html", "css", "javascript"],
   "difficulty": "intermediate",
   "projectPath": "./public/story/main.html"
-}
+  },
+  {
+  "projectNo": 192,
+  "projectName": "Pomodoro With Miu",
+  "projectType": "Tool",
+  "projectDesc": "A cute cat-themed Pomodoro timer built with Electron.js. Features 25/5 focus-break cycles, animated cat GIFs, meow sound notifications, and encouraging messages. Originally a desktop app — browser preview included.",
+  "projectPath": "./public/Pomodoro_With_Miu-Electronjs/index.html",
+  "techStack": ["javascript", "css", "html", "electron"],
+  "difficulty": "intermediate"
+  }
 ]
