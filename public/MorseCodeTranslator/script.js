@@ -149,7 +149,19 @@ const clearInput = () => {
   el("output").textContent = "—";
   el("char-count").textContent = "0";
 };
-
+// ── Download output as .txt file ──────────────────────────────────
+const downloadOutput = () => {
+  const text = el("output").textContent;
+  if (text === "—" || !text.trim()) return;
+  const blob = new Blob([text], { type: "text/plain" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `morse-${mode}-${Date.now()}.txt`;
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast("Downloaded!");
+};
 const copyOutput = () => {
   const text = el("output").textContent;
   if (text === "—" || text === "-") return;
@@ -411,6 +423,7 @@ document.addEventListener("DOMContentLoaded", () => {
   el("clear-btn").addEventListener("click", clearInput);
   el("copy-btn").addEventListener("click", copyOutput);
   el("play-btn").addEventListener("click", togglePlay);
+  el("download-btn").addEventListener("click", downloadOutput);
   el("speed").addEventListener("input", updateSpeed);
   el("ref-toggle-btn").addEventListener("click", toggleRef);
   el("encode-btn").addEventListener("click", () => setMode("encode"));
