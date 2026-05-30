@@ -2384,21 +2384,7 @@
     "difficulty": "advanced",
     "projectPath": "./public/Planet_gesture_formation/index.html"
   },
-
-{
-  "projectNo": 192,
-  "projectName": "Flipkart-clone",
-  "projectType": "Clone",
-  "projectDesc": "An e-commerce platform homepage clone inspired by Flipkart with responsive layouts and sliding banners.",
-  "techStack": [
-    "html",
-    "css",
-    "javascript"
-  ],
-  "projectPath": "./public/Flipkart-clone/index.html"
-},
-      
-]
+   
   {
     "projectNo": 192,
     "projectName": "Interactive Story Player",
@@ -2425,5 +2411,18 @@
     ],
     "difficulty": "intermediate",
     "projectPath": "./public/Escape_Room/index.html"
-  }
+  }, 
+{
+  "projectNo": 194,
+  "projectName": "Flipkart-clone",
+  "projectType": "Clone",
+  "projectDesc": "An e-commerce platform homepage clone inspired by Flipkart with responsive layouts and sliding banners.",
+  "techStack": [
+    "html",
+    "css",
+    "javascript"
+  ],
+  "difficulty": "intermediate",
+  "projectPath": "./public/Flipkart-clone/index.html"
+}
 ]
