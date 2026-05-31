@@ -275,7 +275,7 @@ getProjectDescription(project);
                     ${primaryLink}
                     ${codeLink}
                 </div>
-                <button class="bookmark-btn ${isBookmarked ? 'active' : ''}" data-id="${day}" onclick="event.stopPropagation()">
+                <button class="bookmark-btn ${isBookmarked ? 'active' : ''}" data-id="${day}">
                     <i class="${isBookmarked ? 'fa-solid' : 'fa-regular'} fa-bookmark"></i>
                 </button>
             </div>
@@ -490,9 +490,6 @@ function cleanupExpiredRecentProjects() {
     renderRecentProjects();
   }
 }
-
-// Clean up on page load
-cleanupExpiredRecentProjects();
 
 // Clean up every 5 minutes
 setInterval(cleanupExpiredRecentProjects, 5 * 60 * 1000);
@@ -718,7 +715,7 @@ function renderGrid() {
   pageItems.forEach(([day, name, url, tags]) => {
     const category = getCategoryFromTags(tags, name);
     const card = document.createElement('div');
-    const isBookmarked = bookmarkedProjects.some((item) => item[0] === day);
+    const isBookmarked = bookmarkedProjects.some((item) => normalizeProjectEntry(item).day === day);
     const { html, demoUrl, sourceOnly } = buildProjectCardHTML({
       day,
       name,
@@ -924,17 +921,15 @@ function scrollToProjectSection() {
 }
 
 function toggleBookmark(project) {
-  const exists = bookmarkedProjects.find((item) => item[0] === project[0]);
+  const exists = bookmarkedProjects.find((item) => normalizeProjectEntry(item).day === project[0]);
 
   if (exists) {
-    bookmarkedProjects = bookmarkedProjects.filter((item) => item[0] !== project[0]);
+    bookmarkedProjects = bookmarkedProjects.filter((item) => normalizeProjectEntry(item).day !== project[0]);
     showToast('Bookmark removed');
   } else {
     bookmarkedProjects.push(project);
     showToast('Project bookmarked');
   }
-
-  localStorage.setItem('bookmarkedProjects', JSON.stringify(bookmarkedProjects));
 
   updateBookmarkURL();
 
@@ -952,7 +947,7 @@ function updateBookmarkURL() {
   const url = new URL(window.location);
 
   if (bookmarkedProjects.length > 0) {
-    const bookmarkIds = bookmarkedProjects.map(project => project[0]);
+    const bookmarkIds = bookmarkedProjects.map(project => normalizeProjectEntry(project).day);
     url.searchParams.set('bookmarks', bookmarkIds.join(','));
   } else {
     url.searchParams.delete('bookmarks');
@@ -1035,6 +1030,24 @@ function trackRecentProject(project) {
 
 const bookmarkGrid = document.getElementById('bookmarkGrid');
 
+function normalizeProjectEntry(project) {
+  if (Array.isArray(project)) {
+    return {
+      day: project[0],
+      name: project[1],
+      url: project[2],
+      tags: project[3],
+    };
+  }
+
+  return {
+    day: project.day,
+    name: project.name,
+    url: project.url,
+    tags: project.tags,
+  };
+}
+
 function renderBookmarks() {
   if (!bookmarkGrid) return;
 
@@ -1052,7 +1065,10 @@ function renderBookmarks() {
 
   const visibleBookmarks = showAllBookmarks ? bookmarkedProjects : bookmarkedProjects.slice(0, INITIAL_VISIBLE_ITEMS);
 
-  visibleBookmarks.forEach(([day, name, url, tags]) => {
+  visibleBookmarks.forEach((project) => {
+    const { day, name, url, tags } = normalizeProjectEntry(project);
+    if (!day || !name) return;
+
     const category = getCategoryFromTags(tags, name);
     const card = document.createElement('div');
     const { html, demoUrl, sourceOnly } = buildProjectCardHTML({
@@ -1104,7 +1120,7 @@ function renderRecentProjects() {
     
     const category = getCategoryFromTags(tags, name);
     const card = document.createElement('div');
-    const isBookmarked = bookmarkedProjects.some((item) => item[0] === day);
+    const isBookmarked = bookmarkedProjects.some((item) => normalizeProjectEntry(item).day === day);
     const { html, demoUrl, sourceOnly } = buildProjectCardHTML({
       day,
       name,
@@ -1122,6 +1138,9 @@ function renderRecentProjects() {
     recentGrid.appendChild(card);
   });
 }
+
+// Clean up after grid references are initialized.
+cleanupExpiredRecentProjects();
 
 /* ============================================================
    VIEW ALL TOGGLE
@@ -1146,12 +1165,12 @@ if (copyBookmarksBtn) {
       return;
     }
     const textToCopy = bookmarkedProjects.map(p => {
-      const projectName = p[1];
-      const { demoUrl } = resolveProjectUrls(p[0], p[1], p[2], p[3]);
+      const { day, name, url, tags } = normalizeProjectEntry(p);
+      const { demoUrl } = resolveProjectUrls(day, name, url, tags);
       const projectLink = demoUrl.startsWith('http')
         ? demoUrl
         : new URL(demoUrl, window.location.href).href;
-      return `${projectName} - ${projectLink}`;
+      return `${name} - ${projectLink}`;
     }).join('\n');
 
     try {
