@@ -6,14 +6,14 @@ AI-Semiconductor-Circuit-Builder (NeuralForge) is an interactive web-based semic
 
 ---
 
-## ✨ Features
+## ✨Features
 
-✅ **Design Parameter Configuration** - Configure project name, design goals, process nodes (3nm to 10nm), and target architectures (CPU, NPU, GPU, ASIC)
-✅ **Advanced PPA Calculation Engine** - Real-time computation of Power (Dynamic + Static), Die Area, and TOPS (Tera Operations Per Second) metrics
-✅ **Dynamic Circuit Visualization** - Procedural generation of silicon floorplan layouts with core matrix visualization on canvas
-✅ **Project Storage & Management** - Save, load, and delete chip design projects with persistent localStorage integration
-✅ **Design Comparison Workspace** - Compare multiple design variants side-by-side in a comprehensive comparison table
-✅ **Dark/Light Theme Toggle** - Seamless theme switching with persistent user preference storage
+- ✅ **Design Parameter Configuration** – Configure project name, design goals, process nodes (3nm to 10nm), and target architectures (CPU, NPU, GPU, ASIC)
+- ✅ **Advanced PPA Calculation Engine** – Real-time computation of Power (Dynamic + Static), Die Area, and TOPS (Tera Operations Per Second) metrics
+- ✅ **Dynamic Circuit Visualization** – Procedural generation of silicon floorplan layouts with core matrix visualization on canvas
+- ✅ **Project Storage & Management** – Save, load, and delete chip design projects with persistent localStorage integration
+- ✅ **Design Comparison Workspace** – Compare multiple design variants side-by-side in a comprehensive comparison table
+- ✅ **Dark/Light Theme Toggle** – Seamless theme switching with persistent user preference storage
 
 ---
 
