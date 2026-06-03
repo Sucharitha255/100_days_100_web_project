@@ -2554,5 +2554,19 @@
   ],
   "difficulty": "advanced",
   "projectPath": "./public/Escape The Matrix/index.html"
-}
+},
+{
+    "projectNo": 206,
+    "projectName": "Gravity Well",
+    "projectType": "Animation",
+    "projectDesc": "Interactive physics-based gravity simulation allowing users to create gravitational wells.",
+    "techStack": [
+      "HTML",
+      "canvas",
+      "javascript",
+      "css"
+    ],
+    "difficulty": "intermediate",
+    "projectPath": "./public/gravity-well/index.html"
+  }
 ]
