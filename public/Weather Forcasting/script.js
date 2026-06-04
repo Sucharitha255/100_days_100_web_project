@@ -430,13 +430,27 @@ async function updateComparisonTable() {
 
       setRowMessage(row, 'Loading...');
 
-      const location = await geocodeCity(city);
+      let location;
+      try {
+        location = await geocodeCity(city);
+      } catch (_geoErr) {
+        setRowMessage(row, '—');
+        return;
+      }
+
       if (!location) {
         setRowMessage(row, '—');
         return;
       }
 
-      const weatherData = await fetchWeather(location.latitude, location.longitude);
+      let weatherData;
+      try {
+        weatherData = await fetchWeather(location.latitude, location.longitude);
+      } catch (_fetchErr) {
+        setRowMessage(row, '—');
+        return;
+      }
+
       renderRowWeather(row, weatherData, cachedHeaders);
     })
   );
