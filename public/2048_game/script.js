@@ -246,31 +246,25 @@ function tilePos(r, c) {
    ========================================================= */
 
 function applyGridDimensions() {
-  if (mode === 'zen') {
+
+  const mobile = window.innerWidth <= 480;
+
+  if (mode === "zen") {
     N = 5;
+    TS = mobile ? 58 : 74;
+    GAP = mobile ? 6 : 8;
+    PAD = mobile ? 8 : 10;
   } else {
     N = 4;
+    TS = mobile ? 72 : 94;
+    GAP = mobile ? 8 : 10;
+    PAD = mobile ? 10 : 12;
   }
 
-  const styles = getComputedStyle(document.documentElement);
-
-  TS = parseInt(styles.getPropertyValue('--tile-size'));
-  GAP = parseInt(styles.getPropertyValue('--tile-gap'));
-  PAD = parseInt(styles.getPropertyValue('--board-pad'));
-
-  // For Zen 5×5, auto-shrink tile size so the board fits inside the container
-  if (mode === 'zen') {
-    const wrap = document.getElementById('wr');
-    const availableWidth = wrap.clientWidth || (window.innerWidth - 48);
-    // board total width = PAD*2 + N*TS + (N-1)*GAP  =>  solve for TS
-    const maxTS = Math.floor((availableWidth - PAD * 2 - (N - 1) * GAP) / N);
-    TS = Math.min(TS, maxTS);
-    // Clamp to reasonable min
-    TS = Math.max(TS, 44);
-  }
-
-  const bd = document.getElementById('bd');
-
+  const bd = document.getElementById("bd");
+  bd.style.setProperty('--N', N);
+  bd.style.gap = `${GAP}px`;
+  bd.style.padding = `${PAD}px`;
   bd.style.gridTemplateColumns = `repeat(${N}, ${TS}px)`;
   bd.style.gridTemplateRows = `repeat(${N}, ${TS}px)`;
 }
