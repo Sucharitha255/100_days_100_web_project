@@ -1958,5 +1958,18 @@
     ],
     "difficulty": "advanced",
     "projectPath": "./public/AI-Data-Analyst/"
+  },
+  {
+    "projectNo": 215,
+    "projectName": "Mood-Based Music Recommender",
+    "projectType": "Web App",
+    "projectDesc": "An interactive web application that recommends music based on the user's current mood. Features a premium Spotify-inspired UI, smooth animations, and dynamic themes.",
+    "techStack": [
+      "html",
+      "css",
+      "javascript"
+    ],
+    "difficulty": "intermediate",
+    "projectPath": "./public/Mood_Based_Music_Recommender/"
   }
 ]
