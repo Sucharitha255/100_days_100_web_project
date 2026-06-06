@@ -50,6 +50,25 @@
             <option value="busywork">📋 Busywork</option>
           </select>
         </div>
+        <div class="field">
+  <label for="duration">Duration</label>
+  <select id="duration" class="glass-input">
+    <option value="">⏱️ Any Duration</option>
+    <option value="quick">⚡ Quick (5–15 min)</option>
+    <option value="medium">🕒 Medium (15–60 min)</option>
+    <option value="long">⏳ Long (1+ hour)</option>
+  </select>
+</div>
+
+<div class="field">
+  <label for="difficulty">Difficulty</label>
+  <select id="difficulty" class="glass-input">
+    <option value="">🎯 Any Difficulty</option>
+    <option value="easy">😊 Easy</option>
+    <option value="moderate">💪 Moderate</option>
+    <option value="challenging">🔥 Challenging</option>
+  </select>
+</div>
 
         <div class="field">
           <label for="participants">Participants</label>
@@ -77,6 +96,8 @@
           <span id="pillType"  class="pill"></span>
           <span id="pillPeeps" class="pill"></span>
           <span id="pillCost"  class="pill"></span>
+          <span id="pillDuration" class="pill"></span>
+<span id="pillDifficulty" class="pill"></span>
         </div>
         <div class="result-actions">
           <button id="favBtn"   class="icon-btn" title="Favourite">🤍</button>
