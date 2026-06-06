@@ -24,6 +24,7 @@ saveKeyBtn.addEventListener('click', () => {
 });
 
 let selectedImageBase64 = null;
+let conversationHistory = [];
 
 imageInput.addEventListener('change', () => {
     const file = imageInput.files[0];
@@ -44,7 +45,6 @@ function appendMessage(role, text) {
 
     if (role === 'ai') {
         msgDiv.innerHTML = marked.parse(text);
-        // Add copy button to code blocks
         msgDiv.querySelectorAll('pre').forEach(pre => {
             const copyBtn = document.createElement('button');
             copyBtn.className = 'copy-btn';
@@ -83,18 +83,13 @@ async function getAIResponse(prompt, imageBase64) {
     outputContainer.scrollTop = outputContainer.scrollHeight;
 
     try {
-        const contents = [{
-            parts: [{ text: prompt || "What is in this image?" }]
-        }];
+        const parts = [];
+        if (prompt) parts.push({ text: prompt });
+        if (imageBase64) parts.push({ inline_data: { mime_type: "image/jpeg", data: imageBase64 } });
 
-        if (imageBase64) {
-            contents[0].parts.push({
-                inline_data: {
-                    mime_type: "image/jpeg",
-                    data: imageBase64
-                }
-            });
-        }
+        conversationHistory.push({ role: "user", parts });
+
+        const contents = conversationHistory;
 
         const response = await fetch(`${API_URL}?key=${geminiApiKey}`, {
             method: 'POST',
@@ -115,7 +110,9 @@ async function getAIResponse(prompt, imageBase64) {
         }
 
         if (data.candidates && data.candidates[0].content.parts[0].text) {
-            appendMessage('ai', data.candidates[0].content.parts[0].text);
+            const aiText = data.candidates[0].content.parts[0].text;
+            conversationHistory.push({ role: "model", parts: [{ text: aiText }] });
+            appendMessage('ai', aiText);
         } else {
             throw new Error('No response from AI');
         }
@@ -134,7 +131,6 @@ sendBtn.addEventListener('click', () => {
         appendMessage('user', text || 'Sent an image');
         getAIResponse(text, selectedImageBase64);
 
-        // Reset inputs
         promptInput.value = '';
         imageInput.value = '';
         selectedImageBase64 = null;
