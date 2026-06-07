@@ -2708,21 +2708,19 @@
     "difficulty": "advanced",
     "projectPath": "./public/Mood_Based_Music_Recommender/"
   },
-
-{
-  "projectNo": 216,
-  "projectName": "Runway Calculator",
-  "projectType": "Tool",
-  "projectDesc": "A web-based aviation utility that helps users calculate and determine runway numbers from runway headings. Features an intuitive interface, instant calculations, and responsive design for aviation enthusiasts, students, and professionals.",
-  "techStack": [
-    "html",
-    "css",
-    "javascript"
-  ],
-  "difficulty": "intermediate",
-  "projectPath": "./public/Runway-Calculator/index.html"
-},
-
+  {
+    "projectNo": 216,
+    "projectName": "Runway Calculator",
+    "projectType": "Tool",
+    "projectDesc": "A web-based aviation utility that helps users calculate and determine runway numbers from runway headings. Features an intuitive interface, instant calculations, and responsive design for aviation enthusiasts, students, and professionals.",
+    "techStack": [
+      "html",
+      "css",
+      "javascript"
+    ],
+    "difficulty": "intermediate",
+    "projectPath": "./public/Runway-Calculator/index.html"
+  },
   {
     "projectNo": 217,
     "projectName": "Gemini Clone",
@@ -2766,6 +2764,20 @@
     ],
     "difficulty": "advanced",
     "projectPath": "./public/the_cube/index.html"
+  },
+  {
+    "projectNo": 219,
+    "projectName": "NeoTetris - Premium Edition",
+    "projectType": "Game",
+    "projectDesc": "A premium Tetris experience featuring modern themes, particle effects, achievements, combo systems, daily challenges, responsive controls, synthesized retro audio, dynamic background music, and polished gameplay mechanics.",
+    "techStack": [
+      "html",
+      "css",
+      "javascript",
+      "canvas",
+      "game"
+    ],
+    "difficulty": "advanced",
+    "projectPath": "./public/NeoTetris/index.html"
   }
-
 ]
