@@ -18,6 +18,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const nextTopicTitle = document.getElementById('nextTopicTitle');
   const topicSearch = document.getElementById('topicSearch');
   const clearSearch = document.getElementById('clearSearch');
+  const searchResultsInfo = document.getElementById('searchResultsInfo');
   const menuToggle = document.getElementById('menuToggle');
   const navButtons = document.getElementById('navButtons');
   const sidebarToggle = document.getElementById('sidebarToggle');
@@ -270,6 +271,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
 
       const categories = document.querySelectorAll('.category-group');
+      let totalMatches = 0;
 
       categories.forEach((catGroup) => {
         const topics = catGroup.querySelectorAll('.topic-item');
@@ -280,6 +282,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           if (title.includes(query)) {
             item.style.display = '';
             visibleCount++;
+            totalMatches++;
           } else {
             item.style.display = 'none';
           }
@@ -298,6 +301,14 @@ document.addEventListener('DOMContentLoaded', async () => {
           catGroup.style.display = '';
         }
       });
+      if (!query) {
+          searchResultsInfo.textContent = 'Browse all topics';
+        } else if (totalMatches === 0) {
+           searchResultsInfo.textContent = 'No topics found';
+         } else {
+           searchResultsInfo.textContent =
+    `${totalMatches} topic${totalMatches > 1 ? 's' : ''} found`;
+          }
     });
   }
 
@@ -306,6 +317,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       topicSearch.value = '';
       topicSearch.dispatchEvent(new Event('input'));
       topicSearch.focus();
+      searchResultsInfo.textContent =
+      'Browse all topics';
     });
   }
 

@@ -112,6 +112,13 @@ body.light-mode .learning-sidebar {
   color: var(--text-primary);
 }
 
+.search-results-info {
+  margin-top: 0.75rem;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  min-height: 18px;
+}
+
 /* Sidebar Tree Structure */
 .sidebar-tree {
   flex: 1;
