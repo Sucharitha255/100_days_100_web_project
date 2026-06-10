@@ -1,0 +1,5 @@
+[33md2ab5052[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mfix-preview-404-7613[m[33m, [m[1;31morigin/fix-chart-issue-v2[m[33m, [m[1;32mfix-chart-issue-v2[m[33m)[m fix: correct preview image path generation
+[33m180b5dc1[m fix: add missing preview images causing 404 errors
+[33m5439e5e1[m fix: add missing preview image for typewriter project
+[33mb445fa86[m fix: add missing preview images causing 404 errors
+[33m1a9177b3[m fix: add missing preview images to prevent 404 errors

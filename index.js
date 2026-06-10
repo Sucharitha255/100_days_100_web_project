@@ -7,7 +7,7 @@ if (typeof REPO_OWNER === "undefined") {
 }
 window.REPO_OWNER = window.REPO_OWNER || "dhairyagothi";
 window.REPO_NAME = window.REPO_NAME || "100_days_100_web_project";
-
+  
 let currentPage = 1;
 //for the number of visible projects in one page.
 let itemsPerPage = 9;
