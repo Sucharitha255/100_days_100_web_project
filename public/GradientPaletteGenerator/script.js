@@ -33,6 +33,15 @@ const dom = {
   copyClipboard: document.getElementById("copy-clipboard"),
 };
 
+
+const modal = {
+  root: document.getElementById('confirm-modal'),
+  title: document.getElementById('modal-title'),
+  message: document.getElementById('modal-message'),
+  cancel: document.getElementById('modal-cancel'),
+  confirm: document.getElementById('modal-confirm'),
+};
+
 // ===== Utility Functions =====
 
 /**
@@ -321,13 +330,22 @@ const deleteSaved = (id) => {
 
 /** Clear all saved gradients */
 const clearAllSaved = () => {
-  if (loadSaved().length === 0) {
-    showToast("Nothing to clear");
+  const saved = loadSaved();
+
+  if (saved.length === 0) {
+    showToast('Nothing to clear');
     return;
   }
-  persistSaved([]);
-  renderSavedGrid();
-  showToast("All gradients cleared");
+
+  showConfirmModal({
+    title: 'Clear all gradients?',
+    message: `This will permanently delete ${saved.length} saved gradients.`,
+    onConfirm: () => {
+      persistSaved([]);
+      renderSavedGrid();
+      showToast('All gradients cleared');
+    }
+  });
 };
 
 /**
@@ -398,6 +416,39 @@ const renderSavedGrid = () => {
     dom.savedGrid.appendChild(item);
   });
 };
+
+const showConfirmModal = ({ title, message, onConfirm }) => {
+  modal.title.textContent = title || 'Confirm Action';
+  modal.message.textContent = message || '';
+
+  modal.root.classList.remove('hidden');
+
+  const closeModal = () => {
+    modal.root.classList.add('hidden');
+    modal.confirm.removeEventListener('click', handleConfirm);
+    modal.cancel.removeEventListener('click', closeModal);
+    modal.overlay.removeEventListener('click', closeModal);
+    document.removeEventListener('keydown', handleEsc);
+  };
+
+  const handleConfirm = () => {
+    closeModal();
+    onConfirm?.();
+  };
+
+  const handleEsc = (e) => {
+    if (e.code === 'Escape') closeModal();
+  };
+
+  // IMPORTANT: cache overlay once (add this in DOM refs)
+  modal.overlay = modal.root.querySelector('.modal__overlay');
+
+  modal.confirm.addEventListener('click', handleConfirm);
+  modal.cancel.addEventListener('click', closeModal);
+  modal.overlay.addEventListener('click', closeModal);
+  document.addEventListener('keydown', handleEsc);
+};
+
 
 // ===== Event Listeners =====
 
