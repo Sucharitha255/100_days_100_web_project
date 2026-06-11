@@ -1958,5 +1958,20 @@
     ],
     "difficulty": "advanced",
     "projectPath": "./public/AI-Data-Analyst/"
+  },
+  {
+    "projectNo": 215,
+    "projectName": "Mind Reader",
+    "projectPath": "./public/mind-reader/mind-reader/dist/index.html",
+
+    "techStack": [
+      "react",
+      "html",
+      "css",
+      "javascript"
+    ],
+    "difficulty": "advanced",
+    "projectDesc": "An interactive game where the Genie tries to read your mind and guess your character in 20 questions."
+    
   }
 ]

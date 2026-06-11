@@ -73,6 +73,51 @@ body {
 
 .main-title{
   font-family: "cinzel", serif;
-  font-size: 40px;
-  margin-bottom: 200px;
+  font-size: 50px;
+  margin-bottom: 20px;
 }
+
+
+ 
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 6px solid rgba(255, 255, 255, 0.2); 
+  border-radius: 50%; 
+  border-top-color: #ffffff; 
+  margin: 30px auto; 
+  
+  animation: spin 1s ease-in-out infinite; 
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.gennie{
+ width: 10vw;
+ animation: floating 3s ease-in-out 1s infinite ;
+
+}
+
+@keyframes floating {
+  0%{
+    transform :translateY(0px);
+  }
+  50%{
+    transform :translateY(-20px);
+  }
+  100%{
+    transform :translateY(0px);
+  }
+  
+ }
+
+.title-box{
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  gap: 3vw;
+}
+
