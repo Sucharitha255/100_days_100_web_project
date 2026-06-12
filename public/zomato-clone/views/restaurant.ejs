@@ -59,7 +59,11 @@
               </span>
             </div>
 
-           
+              <!-- Cuisines -->
+            <p class="cuisine-text">
+              <%= item.cuisines && item.cuisines.length ? item.cuisines.join(", ") : "Food" %>
+            </p>
+
        
             <!-- Distance -->
             <div class="distance-row">
