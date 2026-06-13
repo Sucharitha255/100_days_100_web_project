@@ -2891,6 +2891,21 @@
     ],
     "difficulty": "advanced",
     "projectPath": "./public/BeatMaker/demo.html"
+  },
+  {
+    "projectNo": 229,
+    "projectName": "Dad Jokes Generator",
+    "projectType": "Game",
+    "projectDesc": "Tap a Button and generate a Dad Joke",
+    "techStack": [
+      "html",
+      "css",
+      "javascript",
+      "api",
+      "api-javascript"
+    ],
+    "difficulty": "intermediate",
+    "projectPath": "./public/dad-joke/index.html"
   }
 
 ]
