@@ -2893,35 +2893,19 @@
     "projectPath": "./public/BeatMaker/demo.html"
   },
   {
-  "projectNo": 229,
-  "projectName": "MEMO 2.0",
-  "projectType": "Game",
-  "projectDesc": "A premium memory card matching game featuring SOLO and DUO modes, multiple difficulty levels, score tracking, timer-based gameplay, smooth card animations, and a luxury casino-inspired UI.",
-  "techStack": [
-    "html",
-    "css",
-    "javascript",
-    "game",
-    "memory"
-  ],
-  "difficulty": "advanced",
-  "projectPath": "./public/MEMO 2.0/index.html"
-  },
-
-  {
-  "projectNo": 230,
-  "projectName": "Statistics Dashboard",
-  "projectType": "Tool",
-  "projectDesc": "A comprehensive statistics dashboard with localStorage tracking.",
-  "techStack": [
-    "html",
-    "css",
-    "javascript",
-    "localstorage"
-  ],
-  "difficulty": "beginner",
-  "projectPath": "./public/StatisticsDashboard/index.html"
-}
-
+    "projectNo": 229,
+    "projectName": "Dad Jokes Generator",
+    "projectType": "Game",
+    "projectDesc": "Tap a Button and generate a Dad Joke",
+    "techStack": [
+      "html",
+      "css",
+      "javascript",
+      "api",
+      "api-javascript"
+    ],
+    "difficulty": "intermediate",
+    "projectPath": "./public/dad-joke/index.html"
+  }
 
 ]
