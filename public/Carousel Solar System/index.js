@@ -9,11 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function showSlide(index) {
     slides.forEach(slide => slide.classList.remove("active"));
-    planetItems.forEach((item, index) => {
-  item.addEventListener("click", () => {
-    showSlide(index);
-  });
-});
+    miniPlanets.forEach(planet => planet.classList.remove("active"));
 
     if (index < 0) {
       currentIndex = slides.length - 1;
@@ -47,8 +43,8 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  miniPlanets.forEach((planet, index) => {
-    planet.addEventListener("click", () => {
+  planetItems.forEach((item, index) => {
+    item.addEventListener("click", () => {
       showSlide(index);
     });
   });
