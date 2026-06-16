@@ -2924,7 +2924,7 @@
   {
   "projectNo": 231,
   "projectName": "World Explorer",
-  "projectType": "Web Application",
+  "projectType": "Tool",
   "projectDesc": "An interactive world explorer that allows users to discover countries across the globe. Users can search countries, filter by region, view detailed information including capital, population, languages, currencies, time zones, and save favorite countries. The application features a modern responsive UI, dark/light mode, country cards, detailed modals, and an engaging exploration experience.",
   "techStack": [
     "html",
