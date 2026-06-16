@@ -8,6 +8,8 @@ if (typeof REPO_OWNER === "undefined") {
 window.REPO_OWNER = window.REPO_OWNER || "dhairyagothi";
 window.REPO_NAME = window.REPO_NAME || "100_days_100_web_project";
 
+let fuse;
+
 let currentPage = 1;
 //for the number of visible projects in one page.
 let itemsPerPage = 9;
@@ -82,7 +84,20 @@ function hydrateProjects(data) {
     difficulty: project.difficulty,
     projectDesc: project.projectDesc,
   }));
+
+  fuse = new Fuse(PROJECTS, {
+    includeScore: true,
+    threshold: 0.4,
+    ignoreLocation: true,
+    keys: [
+      { name: "projectName", weight: 0.5 },
+      { name: "projectDesc", weight: 0.3 },
+      { name: "techStack", weight: 0.2 }
+    ]
+  });
 }
+
+
 
 function getPreloadedProjectsData() {
   return Array.isArray(window.PROJECTS_DATA) ? window.PROJECTS_DATA : null;
@@ -827,7 +842,14 @@ function renderGrid() {
     updateClearFiltersBtnVisibility();
   }
 
-  const filtered = PROJECTS.filter((project) => {
+  let searchResults = PROJECTS;
+
+if (searchQuery.trim() && fuse) {
+  searchResults = fuse.search(searchQuery).map(result => result.item);
+}
+
+const filtered = searchResults.filter((project) => {
+
     const day = project.day;
     const name = project.projectName;
     const url = project.projectPath;
