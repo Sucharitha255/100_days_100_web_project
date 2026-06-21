@@ -929,7 +929,7 @@
     "projectNo": 79,
     "projectName": "Linkedin Homepage Clone",
     "projectType": "Clone",
-    "projectDesc": "Frontend recreation of LinkedIn’s homepage structure and styling.",
+    "projectDesc": "Frontend recreation of LinkedIn's homepage structure and styling.",
     "techStack": [
       "clone",
       "css"
@@ -1169,7 +1169,7 @@
     "projectNo": 99,
     "projectName": "NASA-APOD Extension",
     "projectType": "API",
-    "projectDesc": "Displays NASA’s Astronomy Picture of the Day automatically.",
+    "projectDesc": "Displays NASA's Astronomy Picture of the Day automatically.",
     "techStack": [
       "api",
       "javascript"
@@ -2964,7 +2964,6 @@
     "difficulty": "intermediate",
     "projectPath": "./public/UnitVerse/index.html"
   },
-  
   {
     "projectNo": 234,
     "projectName": "AI-Prompt-Optimizer",
