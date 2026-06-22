@@ -1159,6 +1159,9 @@ function renderPagination(totalItems, totalPages) {
     pageBtn.className = `page-num ${currentPage === i ? "active" : ""}`;
     pageBtn.textContent = i;
     pageBtn.setAttribute("aria-label", `Page ${i}`);
+    if (currentPage === i) {
+      pageBtn.setAttribute("aria-current", "page");
+    }
     pageBtn.addEventListener("click", (e) => {
       e.preventDefault();
       currentPage = i;
